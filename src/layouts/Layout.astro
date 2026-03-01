@@ -35,6 +35,9 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://infanti.
     <link rel="preload" as="image" href="/hero/hero-poster.avif" fetchpriority="high" />
 
     <title>{title}</title>
+
+    <!-- Umami Analytics (privacy-friendly, no cookies) -->
+    <script defer src="https://cloud.umami.is/script.js" data-website-id="6d5ee3d8-84fe-4397-a525-f470ea80bf7a"></script>
   </head>
   <body>
     <slot />

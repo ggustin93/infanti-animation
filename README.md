@@ -3,11 +3,11 @@
 [![Astro](https://img.shields.io/badge/Astro-5-FF5D01?logo=astro&logoColor=white)](https://astro.build)
 [![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-000000?logo=vercel)](https://vercel.com)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
-[![Lighthouse Performance](https://img.shields.io/badge/Lighthouse-99%2F100-00B140?logo=lighthouse)](https://developers.google.com/web/tools/lighthouse)
+[![Lighthouse Performance](https://img.shields.io/badge/Lighthouse-100%2F100-00B140?logo=lighthouse)](https://developers.google.com/web/tools/lighthouse)
 
 Portfolio website for **Infanti Studio** — the stop-motion animation practice of Louise and Margot Infanti, two Belgian sisters whose work spans film, installation, and exhibitions.
 
-Built for speed, clarity, and craft: bilingual (FR/EN), zero JavaScript framework, Lighthouse 99 on performance. The site is as considered as the work it presents.
+Built for speed, clarity, and craft: bilingual (FR/EN), zero JavaScript framework, Lighthouse 100 across the board. The site is as considered as the work it presents.
 
 ---
 
@@ -95,8 +95,8 @@ Current Lighthouse scores:
 
 | Category | FR | EN |
 |----------|----|----|
-| Performance | 99 | 92 |
-| Accessibility | 95 | 95 |
+| Performance | 100 | 100 |
+| Accessibility | 100 | 100 |
 | Best Practices | 100 | 100 |
 | SEO | 100 | 100 |
 
@@ -104,8 +104,9 @@ Core Web Vitals:
 
 | Metric | FR | EN |
 |--------|----|----|
-| FCP | 1.4s | 2.5s |
-| LCP | 1.6s | 2.5s |
+| FCP | 297ms | 210ms |
+| LCP | 392ms | 370ms |
+| TBT | 0ms | 0ms |
 | CLS | 0 | 0 |
 
 Techniques applied:
@@ -119,7 +120,11 @@ Techniques applied:
 
 ## Eco-design
 
-Targeted optimizations to reduce page weight and eliminate unnecessary network requests, measured via [Ecograder](https://ecograder.com/).
+Targeted optimizations to reduce page weight and eliminate unnecessary network requests.
+
+| Audit | Score | Details |
+|-------|-------|---------|
+| [EcoIndex](https://www.ecoindex.fr/resultat/?id=fca44c0d-8044-4611-be7b-566d5c601c93) | **A** (83/100) | 0.88 Mo, 178 DOM elements, 13 requests |
 
 | Optimization | Impact | Trade-off |
 |-------------|--------|-----------|
@@ -127,6 +132,12 @@ Targeted optimizations to reduce page weight and eliminate unnecessary network r
 | Self-hosted fonts (no Google Fonts) | Eliminates render-blocking third-party chain | 8 woff2 files (~144KB) committed to repo |
 | Hover video abort on mouseleave | Prevents wasted bandwidth on WorkCard previews | Slight reload delay on re-hover |
 | Immutable cache headers | Instant repeat visits for static assets | Assets must be renamed (not overwritten) on update |
+
+---
+
+## Analytics
+
+Visitor stats are collected via **[Umami Cloud](https://umami.is)** — a privacy-friendly, cookie-free analytics service. RGPD-compliant out of the box, lightweight (~2 KB script), no personal data collected. The tracking snippet is loaded in `Layout.astro`.
 
 ---
 

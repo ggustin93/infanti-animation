@@ -6,6 +6,7 @@ interface Props {
     phone: string;
     followUs: string;
     copyright: string;
+    ecoDesigned: string;
   };
 }
 
@@ -65,15 +66,25 @@ const { content } = Astro.props;
 
     <div class="contact-bottom">
       <p>{content.copyright}</p>
-      <p class="contact-credit">
-        <a href="https://pwablo.be/" target="_blank" rel="noopener noreferrer">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <polyline points="16 18 22 12 16 6" />
-            <polyline points="8 6 2 12 8 18" />
-          </svg>
-          developed by pwablo.be
-        </a>
-      </p>
+      <div class="contact-credits">
+        <p class="contact-eco">
+          <a href="https://www.ecoindex.fr/resultat/?id=fca44c0d-8044-4611-be7b-566d5c601c93" target="_blank" rel="noopener noreferrer">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66l.95-2.3c.48.17.98.3 1.34.3C19 20 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5s1.75 3.75 1.75 3.75" />
+            </svg>
+            {content.ecoDesigned}
+          </a>
+        </p>
+        <p class="contact-credit">
+          <a href="https://pwablo.be/" target="_blank" rel="noopener noreferrer">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="16 18 22 12 16 6" />
+              <polyline points="8 6 2 12 8 18" />
+            </svg>
+            developed by pwablo.be
+          </a>
+        </p>
+      </div>
     </div>
   </div>
 </footer>
@@ -154,6 +165,7 @@ const { content } = Astro.props;
   }
 
   .contact-bottom {
+    margin-top: var(--space-md);
     padding-top: var(--space-sm);
     border-top: 1px solid rgba(245, 240, 232, 0.05);
     display: flex;
@@ -169,6 +181,13 @@ const { content } = Astro.props;
     letter-spacing: 0.05em;
   }
 
+  .contact-credits {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .contact-eco a,
   .contact-credit a {
     display: inline-flex;
     align-items: center;
@@ -180,10 +199,12 @@ const { content } = Astro.props;
     transition: color 0.3s ease;
   }
 
+  .contact-eco a:hover,
   .contact-credit a:hover {
     color: rgba(212, 168, 83, 0.9);
   }
 
+  .contact-eco svg,
   .contact-credit svg {
     flex-shrink: 0;
   }
