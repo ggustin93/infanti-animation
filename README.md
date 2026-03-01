@@ -128,8 +128,6 @@ Targeted optimizations to reduce page weight and eliminate unnecessary network r
 | Hover video abort on mouseleave | Prevents wasted bandwidth on WorkCard previews | Slight reload delay on re-hover |
 | Immutable cache headers | Instant repeat visits for static assets | Assets must be renamed (not overwritten) on update |
 
-Green Hosting sub-score is 0/100 — Vercel is not in the [Green Web Foundation directory](https://app.greenweb.org/directory/). Proxying through Cloudflare (which is GWF-listed) is a candidate fix, though the actual Ecograder score change should be verified after setup.
-
 ---
 
 ## Deployment
