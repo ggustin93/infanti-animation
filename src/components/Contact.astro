@@ -189,12 +189,28 @@ const { content } = Astro.props;
   }
 
   @media (max-width: 600px) {
+    .contact {
+      padding: var(--space-lg) var(--space-sm);
+    }
+
     .contact-inner {
       flex-direction: column;
+      gap: var(--space-lg);
+    }
+
+    .contact-social {
+      align-self: flex-start;
+      width: 100%;
     }
 
     .contact-details {
       flex-direction: column;
+      gap: var(--space-sm);
+    }
+
+    .contact-bottom {
+      flex-direction: column;
+      align-items: flex-start;
       gap: var(--space-xs);
     }
   }
