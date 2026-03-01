@@ -161,6 +161,8 @@ const { lang, nav } = Astro.props;
       opacity: 0;
       visibility: hidden;
       transition: opacity 0.3s ease, visibility 0.3s ease;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     .header-nav.open {
@@ -194,6 +196,7 @@ const { lang, nav } = Astro.props;
       const expanded = toggle.getAttribute('aria-expanded') === 'true';
       toggle.setAttribute('aria-expanded', String(!expanded));
       nav.classList.toggle('open');
+      document.body.style.overflow = expanded ? '' : 'hidden';
     });
 
     // Close on nav link click
@@ -201,6 +204,7 @@ const { lang, nav } = Astro.props;
       link.addEventListener('click', () => {
         toggle.setAttribute('aria-expanded', 'false');
         nav.classList.remove('open');
+        document.body.style.overflow = '';
       });
     });
   }
