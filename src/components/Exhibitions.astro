@@ -1,0 +1,108 @@
+---
+interface Props {
+  content: {
+    title: string;
+    archivesTitle: string;
+    archivesDescription: string;
+    visitLink: string;
+  };
+}
+
+const { content } = Astro.props;
+---
+
+<section class="exhibitions" id="exhibitions">
+  <div class="container">
+    <h2 class="section-title reveal">{content.title}</h2>
+
+    <div class="exhibition-card reveal">
+      <div class="exhibition-badge" aria-hidden="true">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="4" y="8" width="32" height="24" rx="2" />
+          <path d="M4 14h32" />
+          <path d="M12 8V6M20 8V6M28 8V6" />
+        </svg>
+      </div>
+      <div class="exhibition-info">
+        <h3>{content.archivesTitle}</h3>
+        <p>{content.archivesDescription}</p>
+        <div class="exhibition-links">
+          <a
+            href="https://www.archivesexhibitions.org/artists/margot-infanti"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="exhibition-link"
+          >
+            {content.visitLink}
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <path d="M6 3h7v7M13 3L5 11" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .exhibitions {
+    background: var(--color-surface);
+  }
+
+  .exhibition-card {
+    display: flex;
+    gap: var(--space-md);
+    align-items: flex-start;
+    padding: var(--space-lg);
+    border: 1px solid rgba(212, 168, 83, 0.1);
+    border-radius: 4px;
+    max-width: 700px;
+  }
+
+  .exhibition-badge {
+    flex-shrink: 0;
+    color: var(--color-accent);
+    padding-top: 0.25rem;
+  }
+
+  .exhibition-info h3 {
+    font-size: 1.25rem;
+    margin-bottom: var(--space-xs);
+  }
+
+  .exhibition-info p {
+    color: var(--color-text-secondary);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    margin-bottom: var(--space-md);
+  }
+
+  .exhibition-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-accent);
+    letter-spacing: 0.05em;
+  }
+
+  .exhibition-link:hover {
+    color: var(--color-accent-hover);
+  }
+
+  .exhibition-link svg {
+    transition: transform 0.3s ease;
+  }
+
+  .exhibition-link:hover svg {
+    transform: translate(2px, -2px);
+  }
+
+  @media (max-width: 600px) {
+    .exhibition-card {
+      flex-direction: column;
+      padding: var(--space-md);
+    }
+  }
+</style>

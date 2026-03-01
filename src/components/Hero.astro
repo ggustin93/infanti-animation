@@ -1,0 +1,272 @@
+---
+interface Props {
+  title: string;
+  subtitle: string;
+}
+
+const { title, subtitle } = Astro.props;
+---
+
+<section class="hero" id="hero">
+  <div class="hero-bg">
+    <video
+      id="hero-video"
+      class="hero-video"
+      muted
+      playsinline
+      preload="none"
+      poster="/hero/hero-poster.avif"
+      aria-hidden="true"
+    >
+      <source src="/hero/margot_infanti_video.webm" type="video/webm" />
+      <source src="/hero/margot_infanti_video.mp4" type="video/mp4" />
+    </video>
+    <div class="hero-overlay"></div>
+  </div>
+  <button
+    id="hero-video-toggle"
+    class="hero-video-toggle"
+    aria-label="Mettre en pause la vidéo de fond"
+    type="button"
+  >
+    <svg class="icon-pause" width="20" height="20" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+      <rect x="5" y="3" width="4" height="14" rx="1" />
+      <rect x="11" y="3" width="4" height="14" rx="1" />
+    </svg>
+    <svg class="icon-play" width="20" height="20" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+      <path d="M6 3.5L16 10L6 16.5V3.5Z" />
+    </svg>
+  </button>
+
+  <div class="hero-content">
+    <h1 class="hero-title">{title}</h1>
+    <p class="hero-subtitle">{subtitle}</p>
+  </div>
+  <div class="hero-scroll" aria-hidden="true">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M7 10l5 5 5-5" />
+    </svg>
+  </div>
+</section>
+
+<script>
+  function initHeroVideo() {
+    const video = document.getElementById('hero-video') as HTMLVideoElement | null;
+    const btn = document.getElementById('hero-video-toggle');
+    if (!video || !btn) return;
+
+    // Play-once: freeze on last frame
+    video.addEventListener('ended', () => {
+      video.pause();
+      btn.classList.add('is-ended');
+    });
+
+    // Pause/play toggle
+    btn.addEventListener('click', () => {
+      if (video.paused) {
+        // If ended, restart
+        if (video.ended) {
+          video.currentTime = 0;
+          btn.classList.remove('is-ended');
+        }
+        video.play();
+        btn.setAttribute('aria-label', 'Mettre en pause la vidéo de fond');
+        btn.classList.remove('is-paused');
+      } else {
+        video.pause();
+        btn.setAttribute('aria-label', 'Lire la vidéo de fond');
+        btn.classList.add('is-paused');
+      }
+    });
+
+    // IntersectionObserver: pause when out of viewport
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) {
+          video.pause();
+        } else if (!video.ended && video.paused && !btn.classList.contains('is-paused')) {
+          video.play();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    observer.observe(video);
+
+    // prefers-reduced-motion: don't autoplay, just show poster
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      btn.classList.add('is-paused');
+      return;
+    }
+
+    // Deferred autoplay: let poster paint as LCP first, then start video
+    const startVideo = () => {
+      video.preload = 'auto';
+      video.play().catch(() => {
+        btn.classList.add('is-paused');
+      });
+    };
+
+    if ('requestIdleCallback' in window) {
+      (window as any).requestIdleCallback(startVideo, { timeout: 2000 });
+    } else {
+      setTimeout(startVideo, 1000);
+    }
+  }
+
+  initHeroVideo();
+</script>
+
+<style>
+  .hero {
+    position: relative;
+    height: 100vh;
+    min-height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 0;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .hero-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(10, 10, 10, 0.4) 0%,
+      rgba(10, 10, 10, 0.6) 50%,
+      rgba(10, 10, 10, 0.8) 100%
+    );
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: var(--space-md);
+  }
+
+  .hero-title {
+    font-size: clamp(2.5rem, 7vw, 5.5rem);
+    color: var(--color-text);
+    letter-spacing: 0.02em;
+    margin-bottom: var(--space-sm);
+    opacity: 0;
+    animation: fade-up 1s ease 0.3s forwards;
+  }
+
+  .hero-subtitle {
+    font-size: clamp(0.875rem, 2vw, 1.125rem);
+    color: var(--color-accent);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 400;
+    opacity: 0;
+    animation: fade-up 1s ease 0.6s forwards;
+  }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: var(--space-md);
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--color-text-secondary);
+    animation: bounce 2s ease-in-out infinite;
+    opacity: 0;
+    animation: fade-in 1s ease 1.2s forwards, bounce 2s ease-in-out 2s infinite;
+  }
+
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(1.5rem); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(8px); }
+  }
+
+  /* Video toggle button */
+  .hero-video-toggle {
+    position: absolute;
+    bottom: var(--space-md);
+    right: var(--space-md);
+    z-index: 2;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    backdrop-filter: blur(4px);
+  }
+
+  .hero-video-toggle:hover,
+  .hero-video-toggle:focus-visible {
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    outline: 2px solid var(--color-accent, #fff);
+    outline-offset: 2px;
+  }
+
+  .hero-video-toggle .icon-play {
+    display: none;
+  }
+
+  .hero-video-toggle.is-paused .icon-pause,
+  .hero-video-toggle.is-ended .icon-pause {
+    display: none;
+  }
+
+  .hero-video-toggle.is-paused .icon-play,
+  .hero-video-toggle.is-ended .icon-play {
+    display: block;
+  }
+
+  /* prefers-reduced-motion */
+  @media (prefers-reduced-motion: reduce) {
+    .hero-video {
+      display: none;
+    }
+
+    .hero-bg::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url('/hero/hero-poster.avif');
+      background-size: cover;
+      background-position: center;
+    }
+
+    .hero-video-toggle {
+      display: none;
+    }
+
+    .hero-scroll {
+      animation: none;
+      opacity: 1;
+    }
+  }
+</style>

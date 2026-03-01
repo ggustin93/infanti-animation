@@ -1,0 +1,50 @@
+{
+  "lang": "en",
+  "meta": {
+    "title": "Infanti Studio — Stop Motion Animation",
+    "description": "Infanti is a stop motion animation studio founded by two Belgian sisters. Discover their poetic universe crafted from needle-felted wool."
+  },
+  "nav": {
+    "about": "The Studio",
+    "works": "Work",
+    "exhibitions": "Exhibitions",
+    "contact": "Contact"
+  },
+  "hero": {
+    "title": "Louise & Margot Infanti",
+    "subtitle": "Animation Studio · Stop Motion · Needle-Felted Wool"
+  },
+  "about": {
+    "title": "The Studio",
+    "statement": "Infanti is a stop motion animation studio founded by two Belgian sisters, Louise and Margot. After following different yet complementary career paths, they launched a project in late January 2024 that they had been dreaming about for a long time: working together to create stop motion animation videos.",
+    "approach": "Working within tight budget and time constraints, they strive to build poetic and surprising worlds — small universes that, in just a few seconds, can evoke emotion and invite the viewer's imagination to expand the story or world beyond what is shown. Their work is crafted almost exclusively using needle-felted wool, chosen both for its aesthetic qualities and for the transparency and flexibility it allows.",
+    "philosophy": "They intentionally preserve a raw and imperfect aesthetic in their videos, allowing the texture and magic of stop motion to come through the screen. Their approach stands in contrast to the rise of AI-generated imagery and its often polished, seamless look. Instead, they aim to highlight the value of handcraft and the beauty of imperfection.",
+    "louise": {
+      "name": "Louise Infanti",
+      "role": "Illustration · Animation · Post-production",
+      "bio": "Louise is an illustrator, comic book artist, and stop motion animator. She graduated from the École de Recherche Graphique in Brussels and later completed several training programs at Technocité in Mons, focusing on animation, rigging, and storyboarding. She is in charge of storyboarding, animation, and post-production."
+    },
+    "margot": {
+      "name": "Margot Infanti",
+      "role": "Directing · Crafting · Animation",
+      "bio": "Margot is a director and stop motion animator. Trained as an actress at the Conservatoire of Brussels, she worked between theatrical roles and teaching. She led puppet-making workshops in Hablingbo, Sweden — an experience that highlighted her long-standing love for crafting. She focuses mainly on directing, crafting, and animation."
+    }
+  },
+  "works": {
+    "title": "Work",
+    "viewWork": "View work"
+  },
+  "exhibitions": {
+    "title": "Exhibitions",
+    "archivesTitle": "Archives Exhibitions",
+    "archivesDescription": "Louise and Margot participated in Archives Exhibitions, a platform dedicated to showcasing emerging artists in the field of animation and visual arts.",
+    "visitLink": "Discover on Archives Exhibitions"
+  },
+  "contact": {
+    "title": "Contact",
+    "email": "minfanti@hotmail.fr",
+    "phone": "0496 04 26 90",
+    "followUs": "Follow us",
+    "copyright": "© 2024–2026 Louise & Margot Infanti. All rights reserved."
+  }
+}

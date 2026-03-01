@@ -1,0 +1,27 @@
+# Dependencies
+node_modules
+
+# Build output
+dist
+
+# Vercel
+.vercel
+
+# OS
+.DS_Store
+
+# Astro cache
+.astro/
+
+# Tool artifacts
+.playwright-mcp/
+.serena/
+
+# Lighthouse reports
+lh-*/
+
+# Local env files
+*.local
+
+# Local audit files
+audit.md

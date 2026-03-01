@@ -1,0 +1,58 @@
+---
+import WorkCard from './WorkCard.astro';
+import VideoModal from './VideoModal.astro';
+import { works } from '../data/works';
+
+interface Props {
+  lang: string;
+  content: {
+    title: string;
+    viewWork: string;
+  };
+}
+
+const { lang, content } = Astro.props;
+const locale = lang as 'fr' | 'en';
+---
+
+<section class="works" id="works">
+  <div class="container">
+    <h2 class="section-title reveal">{content.title}</h2>
+
+    <div class="works-grid">
+      {works.filter(w => w.featured).map((work, index) => (
+        <WorkCard
+          id={work.id}
+          title={work.title[locale]}
+          description={work.description[locale]}
+          thumbnail={work.thumbnail}
+          video={work.video}
+          externalUrl={work.externalUrl}
+          year={work.year}
+          index={index}
+        />
+      ))}
+    </div>
+
+    <VideoModal />
+  </div>
+</section>
+
+<style>
+  .works {
+    background: var(--color-bg);
+  }
+
+  .works-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+    gap: var(--space-md);
+  }
+
+  @media (min-width: 768px) {
+    .works-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-lg);
+    }
+  }
+</style>

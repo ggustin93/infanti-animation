@@ -1,0 +1,21 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import About from '../components/About.astro';
+import Works from '../components/Works.astro';
+import Exhibitions from '../components/Exhibitions.astro';
+import Contact from '../components/Contact.astro';
+import content from '../content/fr.json';
+---
+
+<Layout title={content.meta.title} description={content.meta.description} lang="fr">
+  <Header lang="fr" nav={content.nav} />
+  <main>
+    <Hero title={content.hero.title} subtitle={content.hero.subtitle} />
+    <About content={content.about} />
+    <Works lang="fr" content={content.works} />
+    <Exhibitions content={content.exhibitions} />
+  </main>
+  <Contact content={content.contact} />
+</Layout>

@@ -1,0 +1,207 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  id: string;
+  title: string;
+  description: string;
+  thumbnail: ImageMetadata;
+  video?: string;
+  externalUrl: string;
+  year: number;
+  index: number;
+}
+
+const { id, title, description, thumbnail, video, externalUrl, year, index } = Astro.props;
+---
+
+<article class="work-card reveal" style={`--delay: ${index * 0.1}s`}>
+  <button
+    class="work-trigger"
+    aria-label={`Watch ${title} (${year})`}
+    data-video={video}
+    data-title={title}
+    data-year={String(year)}
+    data-external={externalUrl}
+    data-card-id={id}
+  >
+    <div class="work-thumbnail">
+      <Image src={thumbnail} width={400} densities={[1, 2]} format="avif" quality={75} alt={title} loading="lazy" />
+      {video && (
+        <video class="work-video" id={`preview-${id}`} muted loop playsinline preload="none">
+          <source src={video.replace('.mp4', '.webm')} type="video/webm" />
+          <source src={video} type="video/mp4" />
+        </video>
+      )}
+      <div class="work-overlay">
+        <span class="work-play" aria-hidden="true">
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+            <circle cx="24" cy="24" r="23" stroke="currentColor" stroke-width="1.5" />
+            <path d="M20 16l12 8-12 8V16z" fill="currentColor" />
+          </svg>
+        </span>
+      </div>
+    </div>
+  </button>
+
+  <div class="work-info">
+    <h3 class="work-title">{title}</h3>
+    <div class="work-meta">
+      <span class="work-year">{year}</span>
+      <a
+        href={externalUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="work-instagram"
+        aria-label={`View ${title} on Instagram`}
+        onclick="event.stopPropagation()"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="2" width="20" height="20" rx="5" />
+          <circle cx="12" cy="12" r="5" />
+          <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
+        </svg>
+      </a>
+    </div>
+  </div>
+</article>
+
+<style>
+  .work-card {
+    transition-delay: var(--delay);
+  }
+
+  .work-trigger {
+    display: block;
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: inherit;
+    text-align: left;
+  }
+
+  .work-thumbnail {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: var(--space-sm);
+    background: #141414;
+  }
+
+  .work-thumbnail img,
+  .work-thumbnail video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .work-video {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .work-trigger:hover .work-video,
+  .work-trigger:focus-visible .work-video {
+    opacity: 1;
+  }
+
+  .work-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(10, 10, 10, 0.4);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .work-trigger:hover .work-overlay,
+  .work-trigger:focus-visible .work-overlay {
+    opacity: 1;
+  }
+
+  .work-trigger:hover .work-thumbnail,
+  .work-trigger:focus-visible .work-thumbnail {
+    transform: scale(1.02);
+    transition: transform 0.4s ease;
+  }
+
+  .work-play {
+    color: var(--color-text);
+    transition: transform 0.3s ease;
+  }
+
+  .work-trigger:hover .work-play {
+    transform: scale(1.1);
+  }
+
+  .work-info {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-sm);
+  }
+
+  .work-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+  }
+
+  .work-title {
+    font-size: 1rem;
+    font-family: var(--font-display);
+    color: var(--color-text);
+  }
+
+  .work-year {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    letter-spacing: 0.05em;
+  }
+
+  .work-instagram {
+    color: var(--color-text-secondary);
+    display: flex;
+    align-items: center;
+    transition: color 0.3s ease;
+  }
+
+  .work-instagram:hover {
+    color: var(--color-accent);
+  }
+</style>
+
+<script>
+  document.querySelectorAll('.work-trigger').forEach((trigger) => {
+    const video = trigger.querySelector<HTMLVideoElement>('.work-video');
+
+    if (video) {
+      trigger.addEventListener('mouseenter', () => video.play());
+      trigger.addEventListener('mouseleave', () => {
+        video.pause();
+        video.currentTime = 0;
+      });
+    }
+
+    trigger.addEventListener('click', () => {
+      const el = trigger as HTMLElement;
+      document.dispatchEvent(new CustomEvent('open-video-modal', {
+        detail: {
+          video: el.dataset.video,
+          title: el.dataset.title,
+          year: el.dataset.year,
+          external: el.dataset.external,
+          cardId: el.dataset.cardId,
+        }
+      }));
+    });
+  });
+</script>

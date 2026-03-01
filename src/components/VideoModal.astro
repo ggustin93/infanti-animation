@@ -1,0 +1,280 @@
+<div
+  id="video-modal"
+  class="modal"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Video player"
+  inert
+>
+  <div class="modal-backdrop" id="modal-backdrop"></div>
+  <div class="modal-container">
+    <button class="modal-close" id="modal-close" aria-label="Close video">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18" />
+        <line x1="6" y1="6" x2="18" y2="18" />
+      </svg>
+    </button>
+    <div class="modal-video-wrapper">
+      <video id="modal-video" class="modal-video" playsinline controls preload="none"></video>
+    </div>
+    <div class="modal-info">
+      <h2 id="modal-title" class="modal-title"></h2>
+      <div class="modal-actions">
+        <span id="modal-year" class="modal-year"></span>
+        <a
+          id="modal-instagram"
+          href="#"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="modal-instagram-link"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="5" />
+            <circle cx="12" cy="12" r="5" />
+            <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
+          </svg>
+          Instagram
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.35s ease, visibility 0.35s ease;
+  }
+
+  .modal.is-open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(10, 10, 10, 0.92);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .modal-container {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 90vw;
+    max-height: 95vh;
+    transform: translateY(20px) scale(0.97);
+    transition: transform 0.35s ease;
+  }
+
+  .modal.is-open .modal-container {
+    transform: translateY(0) scale(1);
+  }
+
+  .modal-close {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    background: none;
+    border: none;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    padding: 4px;
+    transition: color 0.3s ease;
+    z-index: 2;
+  }
+
+  .modal-close:hover {
+    color: var(--color-text);
+  }
+
+  .modal-video-wrapper {
+    aspect-ratio: 9 / 16;
+    max-height: 80vh;
+    width: auto;
+    margin: 0 auto;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #000;
+  }
+
+  .modal-video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .modal-info {
+    width: 100%;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    padding-top: var(--space-sm);
+  }
+
+  .modal-title {
+    font-size: 1rem;
+    font-family: var(--font-display);
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  .modal-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+
+  .modal-year {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    letter-spacing: 0.05em;
+  }
+
+  .modal-instagram-link {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .modal-instagram-link:hover {
+    color: var(--color-accent);
+  }
+
+  /* Mobile: slide from bottom */
+  @media (max-width: 767px) {
+    .modal-container {
+      max-width: 100vw;
+      max-height: 100vh;
+      padding: var(--space-md);
+      transform: translateY(100%);
+    }
+
+    .modal.is-open .modal-container {
+      transform: translateY(0);
+    }
+
+    .modal-close {
+      top: -36px;
+      right: var(--space-md);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .modal,
+    .modal-container {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  function initVideoModal() {
+    const modal = document.getElementById('video-modal');
+    const backdrop = document.getElementById('modal-backdrop');
+    const closeBtn = document.getElementById('modal-close');
+    const modalVideo = document.getElementById('modal-video') as HTMLVideoElement | null;
+    const titleEl = document.getElementById('modal-title');
+    const yearEl = document.getElementById('modal-year');
+    const igLink = document.getElementById('modal-instagram') as HTMLAnchorElement | null;
+
+    if (!modal || !modalVideo) return;
+    let activeCardId: string | null = null;
+
+    function openModal({ video, title, year, external, cardId }: {
+      video: string;
+      title: string;
+      year: string;
+      external: string;
+      cardId: string;
+    }) {
+      if (cardId) {
+        const preview = document.getElementById(`preview-${cardId}`) as HTMLVideoElement | null;
+        preview?.pause();
+        activeCardId = cardId;
+      }
+
+      // Clear previous sources
+      while (modalVideo!.firstChild) modalVideo!.removeChild(modalVideo!.firstChild);
+      modalVideo!.removeAttribute('src');
+
+      // Add WebM + MP4 sources
+      const webm = document.createElement('source');
+      webm.src = video.replace('.mp4', '.webm');
+      webm.type = 'video/webm';
+      modalVideo!.appendChild(webm);
+
+      const mp4 = document.createElement('source');
+      mp4.src = video;
+      mp4.type = 'video/mp4';
+      modalVideo!.appendChild(mp4);
+
+      modalVideo!.load();
+
+      if (titleEl) titleEl.textContent = title;
+      if (yearEl) yearEl.textContent = year;
+      if (igLink) igLink.href = external;
+
+      const sbW = window.innerWidth - document.documentElement.clientWidth;
+      document.body.style.paddingRight = `${sbW}px`;
+      document.body.style.overflow = 'hidden';
+
+      modal!.classList.add('is-open');
+      modal!.removeAttribute('inert');
+
+      modalVideo!.play().catch(() => {});
+      closeBtn?.focus();
+    }
+
+    function closeModal() {
+      modalVideo!.pause();
+      while (modalVideo!.firstChild) modalVideo!.removeChild(modalVideo!.firstChild);
+      modalVideo!.removeAttribute('src');
+      modalVideo!.load();
+      modal!.classList.remove('is-open');
+      modal!.setAttribute('inert', '');
+      document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
+
+      if (activeCardId) {
+        const trigger = document.querySelector(`[data-card-id="${activeCardId}"]`) as HTMLElement | null;
+        trigger?.focus();
+        activeCardId = null;
+      }
+    }
+
+    function handleOpen(e: Event) {
+      openModal((e as CustomEvent).detail);
+    }
+
+    document.removeEventListener('open-video-modal', handleOpen);
+    document.addEventListener('open-video-modal', handleOpen);
+
+    closeBtn?.addEventListener('click', closeModal);
+    backdrop?.addEventListener('click', closeModal);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal!.classList.contains('is-open')) {
+        e.stopPropagation();
+        closeModal();
+      }
+    });
+  }
+
+  initVideoModal();
+</script>

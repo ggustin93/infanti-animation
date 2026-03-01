@@ -1,0 +1,189 @@
+---
+import { Image } from 'astro:assets';
+import louiseImg from '../assets/images/about/louise.jpg';
+import margotImg from '../assets/images/about/margot.jpg';
+
+interface Props {
+  content: {
+    title: string;
+    statement: string;
+    approach: string;
+    philosophy: string;
+    louise: { name: string; role: string; bio: string };
+    margot: { name: string; role: string; bio: string };
+  };
+}
+
+const { content } = Astro.props;
+---
+
+<section class="about" id="about">
+  <div class="container">
+    <h2 class="section-title reveal">{content.title}</h2>
+
+    <div class="about-content reveal">
+      <div class="about-lede">
+        <p>{content.statement}</p>
+      </div>
+      <div class="about-details">
+        <p>{content.approach}</p>
+        <p>{content.philosophy}</p>
+      </div>
+    </div>
+
+    <div class="about-profiles">
+      <div class="profile reveal">
+        <div class="profile-photo">
+          <Image src={louiseImg} width={160} height={160} format="avif" quality={80} alt={content.louise.name} loading="lazy" />
+        </div>
+        <div class="profile-info">
+          <h3>{content.louise.name}</h3>
+          <span class="profile-role">{content.louise.role}</span>
+          <p>{content.louise.bio}</p>
+        </div>
+      </div>
+
+      <div class="profile reveal">
+        <div class="profile-photo">
+          <Image src={margotImg} width={160} height={160} format="avif" quality={80} alt={content.margot.name} loading="lazy" />
+        </div>
+        <div class="profile-info">
+          <h3>{content.margot.name}</h3>
+          <span class="profile-role">{content.margot.role}</span>
+          <p>{content.margot.bio}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about {
+    background: var(--color-surface);
+  }
+
+  /* Grille éditoriale 2 colonnes asymétriques */
+  .about-content {
+    display: grid;
+    grid-template-columns: 5fr 6fr;
+    gap: var(--space-lg);
+    align-items: start;
+    margin-bottom: var(--space-xl);
+  }
+
+  /* Colonne gauche : statement en pull-quote */
+  .about-lede {
+    padding-left: var(--space-md);
+    border-left: 2px solid rgba(212, 168, 83, 0.3);
+  }
+
+  .about-lede p {
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 2vw, 1.5rem);
+    line-height: 1.5;
+    color: var(--color-text);
+    position: sticky;
+    top: calc(var(--header-height) + var(--space-md));
+  }
+
+  /* Colonne droite : approche + philosophie */
+  .about-details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .about-details p {
+    color: var(--color-text-secondary);
+    font-size: 1.0625rem;
+    line-height: 1.7;
+  }
+
+  .about-details p + p {
+    padding-top: var(--space-md);
+    border-top: 1px solid rgba(212, 168, 83, 0.1);
+  }
+
+  .about-profiles {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr));
+    gap: var(--space-lg);
+    padding-top: var(--space-lg);
+    border-top: 1px solid rgba(212, 168, 83, 0.15);
+  }
+
+  .profile {
+    display: flex;
+    gap: var(--space-md);
+    align-items: flex-start;
+  }
+
+  .profile-photo {
+    flex-shrink: 0;
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+
+  .profile-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
+  .profile-info h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .profile-role {
+    display: block;
+    font-size: 0.8125rem;
+    color: var(--color-accent);
+    letter-spacing: 0.05em;
+    margin-bottom: var(--space-sm);
+  }
+
+  .profile-info p {
+    color: var(--color-text-secondary);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 600px) {
+    .about-content {
+      grid-template-columns: 1fr;
+      gap: var(--space-md);
+    }
+
+    .about-lede {
+      padding-left: var(--space-sm);
+    }
+
+    .about-lede p {
+      position: static;
+    }
+
+    .about-details {
+      padding-top: var(--space-md);
+      border-top: 1px solid rgba(212, 168, 83, 0.1);
+    }
+
+    .profile {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .profile-photo {
+      width: 80px;
+      height: 80px;
+    }
+
+    .profile-info p {
+      max-width: 100%;
+    }
+  }
+</style>
