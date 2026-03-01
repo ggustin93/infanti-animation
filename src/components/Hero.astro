@@ -12,6 +12,8 @@ const { title, subtitle } = Astro.props;
     <video
       id="hero-video"
       class="hero-video"
+      width="1920"
+      height="1080"
       muted
       playsinline
       preload="none"
@@ -19,7 +21,6 @@ const { title, subtitle } = Astro.props;
       aria-hidden="true"
     >
       <source src="/hero/margot_infanti_video.webm" type="video/webm" />
-      <source src="/hero/margot_infanti_video.mp4" type="video/mp4" />
     </video>
     <div class="hero-overlay"></div>
   </div>

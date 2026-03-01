@@ -9,7 +9,7 @@ interface Props {
 }
 
 const { title, description, lang } = Astro.props;
-const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://infanti-animation.com');
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://infanti.studio');
 ---
 
 <!doctype html>
@@ -28,11 +28,9 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://infanti-
     <meta property="og:url" content={canonicalUrl.href} />
     <meta property="og:locale" content={lang === 'fr' ? 'fr_BE' : 'en_US'} />
 
-    <!-- Google Fonts: preconnect + stylesheet (moved from typography.css @import for FCP) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap" /></noscript>
+    <!-- Self-hosted fonts: preload critical subsets -->
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/instrument-sans-latin.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/dm-serif-display-latin-regular.woff2" crossorigin />
 
     <link rel="preload" as="image" href="/hero/hero-poster.avif" fetchpriority="high" />
 

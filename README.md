@@ -110,9 +110,25 @@ Core Web Vitals:
 
 Techniques applied:
 
-- **Hero video**: poster-first loading, deferred autoplay via `requestIdleCallback`
-- **Fonts**: async `preload` with `onload` pattern to avoid render-blocking
+- **Hero video**: poster-first, deferred autoplay via `requestIdleCallback`, WebM-only (no MP4 fallback)
+- **Fonts**: self-hosted woff2 with `font-display: swap`, preloaded critical subsets — no third-party requests
 - **No framework JS**: zero client-side hydration, minimal JS bundle
+- **Caching**: immutable `Cache-Control` headers for fonts, video, and static media via `vercel.json`
+
+---
+
+## Eco-design
+
+Targeted optimizations to reduce page weight and eliminate unnecessary network requests, measured via [Ecograder](https://ecograder.com/).
+
+| Optimization | Impact | Trade-off |
+|-------------|--------|-----------|
+| WebM-only video (no MP4 fallback) | −976KB page weight | No playback on Safari <16 (<1% of traffic) — poster image shown as fallback |
+| Self-hosted fonts (no Google Fonts) | Eliminates render-blocking third-party chain | 8 woff2 files (~144KB) committed to repo |
+| Hover video abort on mouseleave | Prevents wasted bandwidth on WorkCard previews | Slight reload delay on re-hover |
+| Immutable cache headers | Instant repeat visits for static assets | Assets must be renamed (not overwritten) on update |
+
+Green Hosting sub-score is 0/100 — Vercel is not in the [Green Web Foundation directory](https://app.greenweb.org/directory/). Proxying through Cloudflare (which is GWF-listed) is a candidate fix, though the actual Ecograder score change should be verified after setup.
 
 ---
 
