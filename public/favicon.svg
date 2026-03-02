@@ -1,4 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Background -->
   <rect width="32" height="32" rx="4" fill="#0A0A0A"/>
-  <text x="16" y="22" text-anchor="middle" font-family="Georgia, serif" font-size="18" fill="#D4A853" font-weight="bold">I</text>
+  <!-- Serif "I" letterform: stem in cream (Infanti), serifs in gold (Studio) -->
+  <!-- Stem -->
+  <rect x="14.5" y="8" width="3" height="16" fill="#F5F0E8"/>
+  <!-- Top serif -->
+  <rect x="10" y="8" width="12" height="2.5" rx="1.5" fill="#D4A853"/>
+  <!-- Bottom serif -->
+  <rect x="10" y="21.5" width="12" height="2.5" rx="1.5" fill="#D4A853"/>
 </svg>
