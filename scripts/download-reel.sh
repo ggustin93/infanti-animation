@@ -30,50 +30,43 @@ ROOT="$(dirname "$SCRIPT_DIR")"
 VIDEO_DIR="$ROOT/public/videos/works"
 THUMB_DIR="$ROOT/src/assets/images/works"
 TMP_DIR="$(mktemp -d)"
+trap 'rm -rf "$TMP_DIR"' EXIT
 
 mkdir -p "$VIDEO_DIR" "$THUMB_DIR"
 
 echo ""
 echo "  ▶ Fetching metadata..."
 
-# ── Fetch metadata ────────────────────────────────────────────────────────────
+# ── Fetch metadata (single call, reused for all fields) ───────────────────────
 META=$(yt-dlp --dump-json "$URL" 2>/dev/null)
 
-RAW_DESCRIPTION=$(echo "$META" | python3 -c "
-import json, sys
-d = json.load(sys.stdin)
-print(d.get('description', ''))
-")
+# Parse all fields in one Python invocation
+eval "$(echo "$META" | python3 -c "
+import json, sys, re, shlex
 
-UPLOAD_YEAR=$(echo "$META" | python3 -c "
-import json, sys
 d = json.load(sys.stdin)
-date = d.get('upload_date', '')
-print(date[:4] if date else '')
-")
+raw = d.get('description', '')
+upload_date = d.get('upload_date', '')
 
-# Split description: text before first hashtag / hashtags
-CLEAN_DESCRIPTION=$(echo "$RAW_DESCRIPTION" | python3 -c "
-import sys, re
-text = sys.stdin.read().strip()
-# Remove lines that are only dots (Instagram line breaks)
-lines = [l for l in text.splitlines() if l.strip() not in ('', '.', '..', '...')]
-# Split text vs hashtags
-result = []
+# Year
+year = upload_date[:4] if upload_date else ''
+
+# Split description: lines before first hashtag, stripping dot-only lines
+lines = [l for l in raw.splitlines() if l.strip() not in ('', '.', '..', '...')]
+clean_lines = []
 for line in lines:
-    # Stop at hashtag-only lines
     if re.match(r'^#\w', line.strip()):
         break
-    result.append(line.strip())
-print(' '.join(result).strip())
-")
+    clean_lines.append(line.strip())
+description = ' '.join(clean_lines).strip()
 
-HASHTAGS=$(echo "$RAW_DESCRIPTION" | python3 -c "
-import sys, re
-text = sys.stdin.read()
-tags = re.findall(r'#\w+', text)
-print(' '.join(tags))
-")
+# Hashtags
+hashtags = ' '.join(re.findall(r'#\w+', raw))
+
+print('CLEAN_DESCRIPTION=' + shlex.quote(description))
+print('HASHTAGS=' + shlex.quote(hashtags))
+print('UPLOAD_YEAR=' + shlex.quote(year))
+")"
 
 echo "  ✓ Description: $CLEAN_DESCRIPTION"
 echo "  ✓ Hashtags:    $HASHTAGS"
@@ -132,13 +125,10 @@ ffmpeg -i "$SOURCE_MP4" \
 
 echo "  ✓ Thumbnail: src/assets/images/works/$SLUG.jpg"
 
-# ── Cleanup ───────────────────────────────────────────────────────────────────
-rm -rf "$TMP_DIR"
-
 # ── Camel-case slug for import name ──────────────────────────────────────────
-IMPORT_NAME=$(echo "$SLUG" | python3 -c "
-import sys, re
-slug = sys.stdin.read().strip()
+IMPORT_NAME=$(python3 -c "
+import re
+slug = '${SLUG}'
 parts = re.split(r'[-_]', slug)
 print(parts[0] + ''.join(p.capitalize() for p in parts[1:]) + 'Thumb')
 ")
@@ -163,7 +153,7 @@ echo "    thumbnail: $IMPORT_NAME,"
 echo "    video: '/videos/works/$SLUG.mp4',"
 echo "    externalUrl: '$URL',"
 echo "    year: $YEAR,"
-echo "    featured: true,"
+echo "    featured: false,"
 echo "  },"
 if [[ -n "$HASHTAGS" ]]; then
   echo ""

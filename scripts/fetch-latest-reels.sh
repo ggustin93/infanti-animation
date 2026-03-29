@@ -50,8 +50,6 @@ EXISTING_IDS=$(grep 'externalUrl:' "$WORKS_TS" \
   | sort)
 
 # ── Fetch profile post list ───────────────────────────────────────────────────
-REELS_FILE="$TMP_DIR/reels.json"
-
 fetch_with_instaloader() {
   python3 - <<PYEOF
 import json, sys, re
@@ -95,7 +93,7 @@ fetch_with_ytdlp() {
     --playlist-end "$LIMIT" \
     $COOKIE_ARGS \
     "https://www.instagram.com/${USERNAME}/" 2>/dev/null | python3 -c "
-import json, sys
+import json, sys, re
 
 data = json.load(sys.stdin)
 entries = data.get('entries', [])
@@ -104,7 +102,6 @@ for e in entries:
     url = e.get('webpage_url') or e.get('url', '')
     if not url:
         continue
-    import re
     m = re.search(r'/(p|reel)/([A-Za-z0-9_-]+)', url)
     sc = m.group(2) if m else ''
     posts.append({
@@ -155,6 +152,11 @@ existing_ids = set("""${EXISTING_IDS}""".strip().split())
 print(f"  ✓ Fetched {len(posts)} recent posts")
 print()
 
+def make_slug(caption, shortcode):
+    clean = re.sub(r'#\w+', '', caption).strip()
+    clean = re.sub(r'\s+', '-', re.sub(r'[^a-z0-9\s-]', '', clean.lower()))[:20].strip('-')
+    return clean if clean else f"reel-{shortcode[:6].lower()}"
+
 new_posts = [p for p in posts if p.get('shortcode', '') not in existing_ids]
 
 if not new_posts:
@@ -163,17 +165,11 @@ else:
     print(f"  ⚡ {len(new_posts)} new reel(s) not in works.ts:")
     print()
     for i, p in enumerate(new_posts, 1):
-        url = p['url']
+        slug = make_slug(p.get('caption', ''), p.get('shortcode', ''))
         year = p['date'][:4] if p.get('date') else '?'
-        sc = p.get('shortcode', '')
-        # Suggest a slug based on caption keywords
-        caption = p.get('caption', '')
-        clean = re.sub(r'#\w+', '', caption).strip()
-        clean = re.sub(r'\s+', '-', re.sub(r'[^a-z0-9\s-]', '', clean.lower()))[:20].strip('-')
-        slug = clean if clean else f"reel-{sc[:6].lower()}"
-        print(f"  [{i}] {year}  {url}")
-        if caption:
-            preview = caption[:80] + ('…' if len(caption) > 80 else '')
+        print(f"  [{i}] {year}  {p['url']}")
+        if p.get('caption'):
+            preview = p['caption'][:80] + ('…' if len(p['caption']) > 80 else '')
             print(f"       Caption: {preview}")
         print(f"       Suggested slug: {slug}")
         print()
@@ -182,13 +178,8 @@ else:
     print("  Download commands:")
     print()
     for p in new_posts:
-        url = p['url']
-        sc = p.get('shortcode', '')
-        caption = p.get('caption', '')
-        clean = re.sub(r'#\w+', '', caption).strip()
-        clean = re.sub(r'\s+', '-', re.sub(r'[^a-z0-9\s-]', '', clean.lower()))[:20].strip('-')
-        slug = clean if clean else f"reel-{sc[:6].lower()}"
-        print(f"    ./scripts/download-reel.sh \"{url}\" \"{slug}\"")
+        slug = make_slug(p.get('caption', ''), p.get('shortcode', ''))
+        print(f"    ./scripts/download-reel.sh \"{p['url']}\" \"{slug}\"")
     print("  ────────────────────────────────────────────────────")
     print()
 PYEOF
