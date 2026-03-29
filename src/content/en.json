@@ -12,7 +12,9 @@
   },
   "hero": {
     "title": "Louise & Margot Infanti",
-    "subtitle": "Animation Studio · Stop Motion · Needle-Felted Wool"
+    "subtitle": "Animation Studio · Stop Motion · Needle-Felted Wool",
+    "pauseVideo": "Pause background video",
+    "playVideo": "Play background video"
   },
   "about": {
     "title": "The Studio",

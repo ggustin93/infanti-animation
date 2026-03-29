@@ -2,9 +2,11 @@
 interface Props {
   title: string;
   subtitle: string;
+  pauseVideoLabel: string;
+  playVideoLabel: string;
 }
 
-const { title, subtitle } = Astro.props;
+const { title, subtitle, pauseVideoLabel, playVideoLabel } = Astro.props;
 ---
 
 <section class="hero" id="hero">
@@ -27,7 +29,9 @@ const { title, subtitle } = Astro.props;
   <button
     id="hero-video-toggle"
     class="hero-video-toggle"
-    aria-label="Mettre en pause la vidéo de fond"
+    aria-label={pauseVideoLabel}
+    data-pause-label={pauseVideoLabel}
+    data-play-label={playVideoLabel}
     type="button"
   >
     <svg class="icon-pause" width="20" height="20" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -71,11 +75,11 @@ const { title, subtitle } = Astro.props;
           btn.classList.remove('is-ended');
         }
         video.play();
-        btn.setAttribute('aria-label', 'Mettre en pause la vidéo de fond');
+        btn.setAttribute('aria-label', (btn as HTMLElement).dataset.pauseLabel ?? '');
         btn.classList.remove('is-paused');
       } else {
         video.pause();
-        btn.setAttribute('aria-label', 'Lire la vidéo de fond');
+        btn.setAttribute('aria-label', (btn as HTMLElement).dataset.playLabel ?? '');
         btn.classList.add('is-paused');
       }
     });
@@ -96,6 +100,7 @@ const { title, subtitle } = Astro.props;
     // prefers-reduced-motion: don't autoplay, just show poster
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       btn.classList.add('is-paused');
+      btn.setAttribute('aria-label', (btn as HTMLElement).dataset.playLabel ?? '');
       return;
     }
 

@@ -20,6 +20,9 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://infanti.
     <meta name="description" content={description} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="canonical" href={canonicalUrl.href} />
+    <link rel="alternate" hreflang="fr" href="https://infanti.studio/" />
+    <link rel="alternate" hreflang="en" href="https://infanti.studio/en" />
+    <link rel="alternate" hreflang="x-default" href="https://infanti.studio/" />
 
     <!-- Open Graph -->
     <meta property="og:title" content={title} />
@@ -27,6 +30,18 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://infanti.
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalUrl.href} />
     <meta property="og:locale" content={lang === 'fr' ? 'fr_BE' : 'en_US'} />
+    <meta property="og:locale:alternate" content={lang === 'fr' ? 'en_US' : 'fr_BE'} />
+    <meta property="og:image" content="https://infanti.studio/og-image.jpg" />
+    <meta property="og:image:alt" content={title} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content="https://infanti.studio/og-image.jpg" />
+    <meta name="twitter:image:alt" content={title} />
 
     <!-- Self-hosted fonts: preload critical subsets -->
     <link rel="preload" as="font" type="font/woff2" href="/fonts/instrument-sans-latin.woff2" crossorigin />
@@ -38,6 +53,23 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://infanti.
 
     <!-- Umami Analytics (privacy-friendly, no cookies) -->
     <script defer src="https://cloud.umami.is/script.js" data-website-id="6d5ee3d8-84fe-4397-a525-f470ea80bf7a"></script>
+
+    <!-- Organization JSON-LD -->
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Infanti Studio",
+  "url": "https://infanti.studio",
+  "logo": "https://infanti.studio/favicon.svg",
+  "email": "minfanti@hotmail.fr",
+  "sameAs": [
+    "https://www.instagram.com/margot.infanti/",
+    "https://www.instagram.com/louise_infanti/",
+    "https://www.tiktok.com/@inf.sisters"
+  ]
+}
+    </script>
   </head>
   <body>
     <slot />

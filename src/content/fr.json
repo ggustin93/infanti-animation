@@ -12,7 +12,9 @@
   },
   "hero": {
     "title": "Louise & Margot Infanti",
-    "subtitle": "Studio d'Animation · Stop Motion · Laine Feutrée"
+    "subtitle": "Studio d'Animation · Stop Motion · Laine Feutrée",
+    "pauseVideo": "Mettre en pause la vidéo de fond",
+    "playVideo": "Lire la vidéo de fond"
   },
   "about": {
     "title": "Le Studio",

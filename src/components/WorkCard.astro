@@ -11,15 +11,16 @@ interface Props {
   externalUrl: string;
   year: number;
   index: number;
+  viewWorkLabel: string;
 }
 
-const { id, title, description, thumbnail, video, externalUrl, year, index } = Astro.props;
+const { id, title, description, thumbnail, video, externalUrl, year, index, viewWorkLabel } = Astro.props;
 ---
 
 <article class="work-card reveal" style={`--delay: ${index * 0.1}s`}>
   <button
     class="work-trigger"
-    aria-label={`Watch ${title} (${year})`}
+    aria-label={`${viewWorkLabel} — ${title} (${year})`}
     data-video={video}
     data-title={title}
     data-year={String(year)}
@@ -53,7 +54,7 @@ const { id, title, description, thumbnail, video, externalUrl, year, index } = A
         target="_blank"
         rel="noopener noreferrer"
         class="work-instagram"
-        aria-label={`View ${title} on Instagram`}
+        aria-label={`${viewWorkLabel} — ${title} — Instagram`}
         onclick="event.stopPropagation()"
       >
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
