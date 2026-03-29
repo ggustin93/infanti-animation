@@ -34,7 +34,10 @@
   },
   "works": {
     "title": "Œuvres",
-    "viewWork": "Voir l'œuvre"
+    "viewWork": "Voir l'œuvre",
+    "seeAll": "Voir toutes les œuvres",
+    "allWorksTitle": "Toutes les œuvres",
+    "allWorksDescription": "L'ensemble des animations stop motion du Studio Infanti."
   },
   "exhibitions": {
     "title": "Expositions",

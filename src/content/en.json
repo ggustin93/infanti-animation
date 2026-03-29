@@ -34,7 +34,10 @@
   },
   "works": {
     "title": "Work",
-    "viewWork": "View work"
+    "viewWork": "View work",
+    "seeAll": "See all works",
+    "allWorksTitle": "All works",
+    "allWorksDescription": "The complete stop motion animation work of Infanti Studio."
   },
   "exhibitions": {
     "title": "Exhibitions",

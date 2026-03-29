@@ -1,0 +1,97 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import WorkCard from '../../components/WorkCard.astro';
+import VideoModal from '../../components/VideoModal.astro';
+import { works } from '../../data/works';
+import content from '../../content/fr.json';
+---
+
+<Layout title={content.works.allWorksTitle} description={content.works.allWorksDescription} lang="fr">
+  <main class="works-page">
+    <div class="container">
+      <header class="works-page-header">
+        <a href="/" class="back-link">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Studio
+        </a>
+        <h1 class="works-page-title">{content.works.allWorksTitle}</h1>
+      </header>
+
+      <div class="works-grid">
+        {works.map((work, index) => (
+          <WorkCard
+            id={work.id}
+            title={work.title.fr}
+            description={work.description.fr}
+            thumbnail={work.thumbnail}
+            video={work.video}
+            externalUrl={work.externalUrl}
+            year={work.year}
+            index={index}
+            viewWorkLabel={content.works.viewWork}
+          />
+        ))}
+      </div>
+    </div>
+
+    <VideoModal />
+  </main>
+</Layout>
+
+<style>
+  .works-page {
+    min-height: 100vh;
+    background: var(--color-bg);
+    padding-top: var(--space-xl);
+    padding-bottom: var(--space-xl);
+  }
+
+  .container {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+  }
+
+  .works-page-header {
+    margin-bottom: var(--space-xl);
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    margin-bottom: var(--space-md);
+    transition: color 0.3s ease;
+  }
+
+  .back-link:hover {
+    color: var(--color-accent);
+  }
+
+  .works-page-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    color: var(--color-text);
+    font-weight: 400;
+  }
+
+  .works-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+    gap: var(--space-md);
+  }
+
+  @media (min-width: 768px) {
+    .works-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-lg);
+    }
+  }
+</style>

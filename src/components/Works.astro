@@ -8,6 +8,7 @@ interface Props {
   content: {
     title: string;
     viewWork: string;
+    seeAll: string;
   };
 }
 
@@ -35,6 +36,12 @@ const locale = lang as 'fr' | 'en';
       ))}
     </div>
 
+    <div class="works-footer">
+      <a href={lang === 'fr' ? '/works' : '/en/works'} class="works-see-all">
+        {content.seeAll}
+      </a>
+    </div>
+
     <VideoModal />
   </div>
 </section>
@@ -42,6 +49,27 @@ const locale = lang as 'fr' | 'en';
 <style>
   .works {
     background: var(--color-bg);
+  }
+
+  .works-footer {
+    text-align: center;
+    padding-top: var(--space-lg);
+  }
+
+  .works-see-all {
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    padding-bottom: 2px;
+    transition: color 0.3s ease, border-color 0.3s ease;
+  }
+
+  .works-see-all:hover {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
   }
 
   .works-grid {
