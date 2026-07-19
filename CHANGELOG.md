@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Individual work detail pages at `/works/[slug]` (FR) and `/en/works/[slug]` (EN) — crawlable, indexable pages per work with video, description, breadcrumb, and internal links to the rest of the catalogue (previously works only opened a modal + linked to Instagram)
+- `WorkDetail` component emitting `VideoObject` and `BreadcrumbList` JSON-LD per work page (eligible for Google video rich results)
+- Site-wide structured-data `@graph` on every page — `Organization` (with founders, `foundingDate`, address, telephone, raster logo), `WebSite`, and a `Person` entity for each sister — strengthening brand disambiguation
+- `image`, `ogType`, and `schema` props on `Layout` for per-page Open Graph images and JSON-LD injection
+- `works.detail` i18n block and keyword-rich `allWorksMetaTitle` for the gallery pages
+- `www` → non-`www` 301 redirect in `vercel.json`
 - Bilingual methodology page at `/methodologie` (FR) and `/en/methodology` (EN), presenting the five production stages — screenwriting, visual development, fabrication, animation, post-production — as alternating text/photo rows
 - `MethodologyPage` component rendering the five stage photos through `astro:assets` (`src/assets/images/methodologie/`), with a build-time guard that fails with a locale- and step-specific message when `fr.json` and `en.json` drift
 - `BackLink` component extracted from `WorksPage` — shared back-navigation link with an icon and a localized label
@@ -16,9 +22,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `altPathFr` / `altPathEn` props on `Layout` for correct `hreflang` when the FR and EN routes do not share a slug
 
 ### Changed
+- `hreflang` tags are now computed per page from the current path (were hardcoded to the homepage on every page, so `/works` etc. declared the wrong alternates)
+- Sitemap now emits `xhtml:link` language alternates via the `@astrojs/sitemap` `i18n` option
+- Bare `Organization` JSON-LD replaced by a full entity graph; `logo` switched from the SVG favicon to a raster image
+- Work cards link to their detail page via a crawlable title link; image `alt` is now descriptive instead of the bare title
+- Gallery page `<title>` gains a keyword + brand suffix (was just "All works" / "Toutes les œuvres")
 - `WorksPage` back-link label is now localized via a `backLabel` prop instead of a hardcoded "Studio"
 
 ### Fixed
+- Emoji-only work titles (`🌺🦷`, `🐽`, `🐸✨`), empty descriptions, and one mistranslated `apartment` description in `works.ts` replaced with real bilingual copy (drafts pending studio review)
 - Mobile menu stayed open when following a cross-page navigation link — the close handler now matches all `a` elements instead of only `a[href^="#"]`
 - Header logo href carried a trailing slash on EN (`/en/`) conflicting with `trailingSlash: 'never'` — corrected to `/en`
 

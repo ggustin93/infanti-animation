@@ -56,6 +56,7 @@ infanti-animation/
 │   │   ├── Works.astro          # Homepage featured works section
 │   │   ├── WorkCard.astro
 │   │   ├── WorksPage.astro      # Shared component for /works and /en/works gallery pages
+│   │   ├── WorkDetail.astro     # Shared component for per-work detail pages (VideoObject + breadcrumb schema)
 │   │   ├── MethodologyPage.astro # Shared component for the FR/EN methodology pages
 │   │   ├── BackLink.astro       # Shared back-navigation link (icon + localized label)
 │   │   ├── Exhibitions.astro
@@ -75,13 +76,15 @@ infanti-animation/
 │   ├── pages/
 │   │   ├── index.astro         # FR homepage
 │   │   ├── works/
-│   │   │   └── index.astro     # FR full gallery
+│   │   │   ├── index.astro     # FR full gallery
+│   │   │   └── [slug].astro    # FR per-work detail page
 │   │   ├── methodologie/
 │   │   │   └── index.astro     # FR methodology page
 │   │   └── en/
 │   │       ├── index.astro     # EN homepage
 │   │       ├── works/
-│   │       │   └── index.astro # EN full gallery
+│   │       │   ├── index.astro # EN full gallery
+│   │       │   └── [slug].astro # EN per-work detail page
 │   │       └── methodology/
 │   │           └── index.astro # EN methodology page
 │   └── styles/
@@ -149,6 +152,18 @@ Techniques applied:
 - **Caching**: immutable `Cache-Control` headers for fonts, video, and static media via `vercel.json`
 
 Target Lighthouse scores: Performance ≥ 95, Accessibility ≥ 95, Best Practices 100, SEO 100.
+
+---
+
+## SEO
+
+- **Per-page metadata** — unique title, description, canonical, and Open Graph / Twitter cards via `Layout.astro`; work pages pass a per-work OG image.
+- **Structured data** — a site-wide JSON-LD `@graph` (`Organization` + `WebSite` + a `Person` per sister) on every page, plus `VideoObject` and `BreadcrumbList` on each work detail page.
+- **Indexable catalogue** — every work has its own crawlable page at `/works/[slug]`; cards and galleries link to them (no longer modal-only).
+- **i18n signals** — per-page `hreflang` (see [Internationalisation](#internationalisation)) and `xhtml:link` alternates in the sitemap.
+- **Canonical host** — `www` → non-`www` 301 in `vercel.json`; `robots.txt` points to `sitemap-index.xml`.
+
+After each deploy, resubmit the sitemap in Google Search Console and request indexing of new work pages.
 
 ---
 
