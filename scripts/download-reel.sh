@@ -7,6 +7,11 @@
 # Example:
 #   ./scripts/download-reel.sh https://www.instagram.com/reel/ABC123/ ma-nouvelle-oeuvre
 #
+# Auth:
+#   Instagram now blocks anonymous media access. Export a cookies.txt from a
+#   logged-in browser and pass it via IG_COOKIES:
+#     IG_COOKIES=/tmp/ig_cookies.txt ./scripts/download-reel.sh <url> <slug>
+#
 # Output:
 #   public/videos/works/<slug>.mp4
 #   public/videos/works/<slug>.webm
@@ -34,11 +39,19 @@ trap 'rm -rf "$TMP_DIR"' EXIT
 
 mkdir -p "$VIDEO_DIR" "$THUMB_DIR"
 
+# ── Auth ──────────────────────────────────────────────────────────────────────
+# Instagram no longer serves media anonymously. Point IG_COOKIES at a Netscape
+# cookies.txt exported from a logged-in browser session.
+COOKIE_ARGS=()
+if [[ -n "${IG_COOKIES:-}" ]]; then
+  COOKIE_ARGS=(--cookies "$IG_COOKIES")
+fi
+
 echo ""
 echo "  ▶ Fetching metadata..."
 
 # ── Fetch metadata (single call, reused for all fields) ───────────────────────
-META=$(yt-dlp --dump-json "$URL" 2>/dev/null)
+META=$(yt-dlp ${COOKIE_ARGS[@]+"${COOKIE_ARGS[@]}"} --dump-json "$URL" 2>/dev/null)
 
 # Parse all fields in one Python invocation
 eval "$(echo "$META" | python3 -c "
@@ -75,7 +88,7 @@ echo ""
 echo "  ▶ Downloading: $URL"
 
 # ── Download best MP4 ─────────────────────────────────────────────────────────
-yt-dlp \
+yt-dlp ${COOKIE_ARGS[@]+"${COOKIE_ARGS[@]}"} \
   --format "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best" \
   --merge-output-format mp4 \
   --output "$TMP_DIR/source.%(ext)s" \
