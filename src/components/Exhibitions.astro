@@ -46,7 +46,9 @@ const { content } = Astro.props;
 
 <style>
   .exhibitions {
-    background: var(--color-surface);
+    /* bg, not surface: the methodology teaser above now takes the surface band,
+       keeping the page alternating surface/bg/surface/bg down its length. */
+    background: var(--color-bg);
   }
 
   .exhibition-card {

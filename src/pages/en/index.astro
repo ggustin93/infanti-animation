@@ -4,6 +4,7 @@ import Header from '../../components/Header.astro';
 import Hero from '../../components/Hero.astro';
 import About from '../../components/About.astro';
 import Works from '../../components/Works.astro';
+import Methodology from '../../components/Methodology.astro';
 import Exhibitions from '../../components/Exhibitions.astro';
 import Contact from '../../components/Contact.astro';
 import content from '../../content/en.json';
@@ -15,6 +16,7 @@ import content from '../../content/en.json';
     <Hero title={content.hero.title} subtitle={content.hero.subtitle} pauseVideoLabel={content.hero.pauseVideo} playVideoLabel={content.hero.playVideo} />
     <About content={content.about} />
     <Works lang="en" content={content.works} />
+    <Methodology lang="en" content={content.methodology} />
     <Exhibitions content={content.exhibitions} />
   </main>
   <Contact content={content.contact} />

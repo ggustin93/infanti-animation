@@ -1,0 +1,147 @@
+---
+/*
+ * Homepage teaser for /methodologie.
+ *
+ * Typographic rather than photographic: the Works grid sits directly above, so a second
+ * image row here would read as "more works". The numerals carry the visual weight instead
+ * — they are the same gold display-serif device the methodology page uses at full size,
+ * so the teaser and its destination share a vocabulary.
+ *
+ * Stage labels and intro are reused verbatim from the content the page itself renders,
+ * so there is no second copy to drift.
+ */
+interface Props {
+  lang: 'fr' | 'en';
+  content: {
+    title: string;
+    intro: string;
+    homeCta: string;
+    steps: { id: string; title: string }[];
+  };
+}
+
+const { lang, content } = Astro.props;
+
+if (!content?.homeCta) {
+  throw new Error(`Methodology (${lang}): missing methodology.homeCta in ${lang}.json.`);
+}
+
+const href = lang === 'fr' ? '/methodologie' : '/en/methodology';
+---
+
+<section class="methodology" id="methodology">
+  <div class="container">
+    <div class="methodology-head reveal">
+      <div class="methodology-lede">
+        <h2 class="section-title">{content.title}</h2>
+        <p>{content.intro}</p>
+      </div>
+      <a href={href} class="methodology-link">{content.homeCta}</a>
+    </div>
+
+    {/* Explicit list roles: `list-style: none` strips list semantics in Safari/VoiceOver,
+        and the numerals are aria-hidden, so this markup carries the ordinal meaning. */}
+    <ol class="stages reveal" role="list">
+      {content.steps.map((step, index) => (
+        <li role="listitem">
+          <span class="stage-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+          <span class="stage-title">{step.title}</span>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .methodology {
+    background: var(--color-surface);
+  }
+
+  .methodology-head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+  }
+
+  .methodology-lede p {
+    color: var(--color-text-secondary);
+    max-width: 52ch;
+    line-height: 1.7;
+  }
+
+  /* Matches the "see all works" affordance so the two page-level CTAs read as a pair. */
+  .methodology-link {
+    align-self: flex-start;
+    flex-shrink: 0;
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-text-secondary) 30%, transparent);
+    padding-bottom: 2px;
+    transition: color 0.3s ease, border-color 0.3s ease;
+  }
+
+  .methodology-link:hover {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+
+  .stages {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-md) var(--space-sm);
+  }
+
+  /* A shared rule threading across all five items reads as a sequence rather than
+     five unrelated cells — the numerals sit on it like markers on a timeline. */
+  .stages li {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    padding-top: var(--space-sm);
+    border-top: 1px solid color-mix(in srgb, var(--color-accent) 25%, transparent);
+  }
+
+  .stage-number {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    line-height: 1;
+    color: var(--color-accent);
+  }
+
+  .stage-title {
+    font-size: 0.9375rem;
+    line-height: 1.4;
+    color: var(--color-text);
+  }
+
+  @media (min-width: 700px) {
+    .stages {
+      grid-template-columns: repeat(5, 1fr);
+      gap: var(--space-md);
+    }
+
+    .stage-number {
+      font-size: 2rem;
+    }
+  }
+
+  @media (min-width: 900px) {
+    .methodology-head {
+      flex-direction: row;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: var(--space-lg);
+    }
+
+    .methodology-link {
+      align-self: auto;
+    }
+  }
+</style>
