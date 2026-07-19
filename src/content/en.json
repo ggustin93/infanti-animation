@@ -7,8 +7,10 @@
   "nav": {
     "about": "The Studio",
     "works": "Work",
+    "methodology": "Methodology",
     "exhibitions": "Exhibitions",
-    "contact": "Contact"
+    "contact": "Contact",
+    "backToStudio": "Studio"
   },
   "hero": {
     "title": "Louise & Margot Infanti",
@@ -46,6 +48,59 @@
       "watchInstagram": "Watch on Instagram",
       "moreWorks": "More works"
     }
+  },
+  "methodology": {
+    "title": "Our Methodology",
+    "metaTitle": "Methodology — From Screenwriting to Post-Production · Infanti Studio",
+    "description": "From screenwriting to post-production: the five stages behind an Infanti Studio stop motion film, with needle-felted puppets and crocheted wool sets.",
+    "intro": "Five stages, from the first intuition to the final frame. Each is led together, or handed to whichever of us it belongs to.",
+    "steps": [
+      {
+        "id": "ecriture",
+        "title": "Screenwriting",
+        "body": [
+          "Every project begins with a shared process of discussion and creative exploration. Ideas, intuitions, and visual concepts are developed together before being shaped into a screenplay by Margot.",
+          "This stage allows us to structure the narrative while preserving the spontaneity and sensitivity of our initial ideas."
+        ],
+        "alt": "Handwritten preparation notes pinned to a wall above a desk, with an open notebook and a shooting plan"
+      },
+      {
+        "id": "recherche-graphique",
+        "title": "Visual Development",
+        "body": [
+          "Louise develops the film's visual world through concept sketches and storyboards. She explores shapes, textures, and atmospheres while translating the story into a sequence of images.",
+          "This stage is essential for establishing the project's visual language and rhythm, providing the foundation that guides the animation process."
+        ],
+        "alt": "Open sketchbook showing blue ballpoint character concept drawings"
+      },
+      {
+        "id": "confection",
+        "title": "Fabrication",
+        "body": [
+          "Based on the drawings, Margot gives the characters and sets a tangible, physical form. The puppets are built around wire armatures and covered with needle-felted wool.",
+          "The sets are also crafted from wool, using needle felting and crochet techniques, with a focus on natural, organic materials. This stage grounds the film in a tactile, handcrafted aesthetic."
+        ],
+        "alt": "A needle-felted puppet face resting on a workbench beside a makeup palette"
+      },
+      {
+        "id": "animation",
+        "title": "Animation",
+        "body": [
+          "We animate together, frame by frame, through a meticulous and patient process.",
+          "Every movement is created by hand, gradually bringing the characters and their world to life."
+        ],
+        "alt": "Hands adjusting a needle-felted puppet on a red set, behind a camera mounted on a tripod"
+      },
+      {
+        "id": "post-production",
+        "title": "Post-Production",
+        "body": [
+          "Louise oversees the post-production stage, adding subtle 2D details such as eyelids and pupils. These elements are carefully designed to blend seamlessly with the physical materials, matching the texture of the wool.",
+          "We strive to make this stage as invisible as possible, preserving the coherence, tactility, and material presence of the image."
+        ],
+        "alt": "A hand drawing with a stylus on a graphics tablet, retouching a puppet's face frame by frame"
+      }
+    ]
   },
   "exhibitions": {
     "title": "Exhibitions",

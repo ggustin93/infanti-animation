@@ -12,9 +12,15 @@ interface Props {
   ogType?: string;
   /** Page-specific JSON-LD (object or array) injected in addition to the site-wide graph. */
   schema?: Record<string, unknown> | Record<string, unknown>[];
+  /**
+   * Absolute-path overrides for hreflang, required when the FR and EN routes do not
+   * share a slug (e.g. /methodologie ↔ /en/methodology). Omit when the slugs match.
+   */
+  altPathFr?: string;
+  altPathEn?: string;
 }
 
-const { title, description, lang, image, ogType = 'website', schema } = Astro.props;
+const { title, description, lang, image, ogType = 'website', schema, altPathFr, altPathEn } = Astro.props;
 
 const site = Astro.site ?? new URL('https://infanti.studio');
 const canonicalUrl = new URL(Astro.url.pathname, site);
@@ -23,8 +29,8 @@ const canonicalUrl = new URL(Astro.url.pathname, site);
 const path = Astro.url.pathname;
 const isEn = path === '/en' || path.startsWith('/en/');
 const basePath = isEn ? (path === '/en' ? '' : path.slice(3)) : (path === '/' ? '' : path);
-const frHref = new URL(basePath || '/', site).href;
-const enHref = new URL('/en' + basePath, site).href;
+const frHref = new URL(altPathFr ?? (basePath || '/'), site).href;
+const enHref = new URL(altPathEn ?? '/en' + basePath, site).href;
 
 const ogImage = image ?? new URL('/og-image.jpg', site).href;
 const useDefaultImage = !image;

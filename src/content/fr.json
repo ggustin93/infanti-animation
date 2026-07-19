@@ -7,8 +7,10 @@
   "nav": {
     "about": "Le Studio",
     "works": "Œuvres",
+    "methodology": "Méthodologie",
     "exhibitions": "Expositions",
-    "contact": "Contact"
+    "contact": "Contact",
+    "backToStudio": "Studio"
   },
   "hero": {
     "title": "Louise & Margot Infanti",
@@ -46,6 +48,59 @@
       "watchInstagram": "Voir sur Instagram",
       "moreWorks": "Autres œuvres"
     }
+  },
+  "methodology": {
+    "title": "Notre méthodologie",
+    "metaTitle": "Méthodologie — De l'écriture à la post-production · Infanti Studio",
+    "description": "De l'écriture du scénario à la post-production : les cinq étapes de fabrication d'un film en stop motion chez Infanti Studio, marionnettes en laine feutrée et décors crochetés.",
+    "intro": "Cinq étapes, de la première intuition à la dernière image. Chacune est menée à deux, ou confiée à celle d'entre nous dont c'est le métier.",
+    "steps": [
+      {
+        "id": "ecriture",
+        "title": "L'écriture scénaristique",
+        "body": [
+          "Chaque projet naît d'un travail commun de réflexion et d'échange. Les idées, les intuitions et les images se construisent à deux, avant d'être mises en forme par Margot, qui se charge de l'écriture du scénario.",
+          "Cette étape permet de structurer le récit tout en préservant la spontanéité et la sensibilité des premières intentions."
+        ],
+        "alt": "Notes de préparation manuscrites punaisées au mur au-dessus d'un bureau, avec un carnet ouvert et un plan de tournage"
+      },
+      {
+        "id": "recherche-graphique",
+        "title": "La recherche graphique",
+        "body": [
+          "Louise développe l'univers visuel du film à travers des dessins de recherche et le storyboard. Elle explore les formes et les ambiances, tout en traduisant le récit en séquences d'images.",
+          "Cette phase est essentielle pour poser les bases esthétiques et rythmiques du projet et nous guider dans l'animation."
+        ],
+        "alt": "Carnet de croquis ouvert montrant des dessins de recherche de personnages au stylo bleu"
+      },
+      {
+        "id": "confection",
+        "title": "La confection",
+        "body": [
+          "À partir des dessins, Margot donne une existence matérielle aux personnages et aux décors. Les marionnettes sont construites autour d'armatures métalliques en fil de fer, puis enveloppées de laine feutrée à l'aiguille.",
+          "Les décors sont également réalisés en laine, feutrée ou crochetée, privilégiant des matières organiques. Cette étape ancre le film dans une dimension tactile et artisanale."
+        ],
+        "alt": "Visage de marionnette en laine feutrée à l'aiguille posé sur un plan de travail, à côté d'une palette de maquillage"
+      },
+      {
+        "id": "animation",
+        "title": "L'animation",
+        "body": [
+          "Nous animons ensemble, image par image, dans un travail minutieux et patient.",
+          "Chaque mouvement est construit à la main, donnant progressivement vie aux personnages et à leur environnement."
+        ],
+        "alt": "Mains ajustant une marionnette en laine feutrée sur un décor rouge, derrière un appareil photo monté sur trépied"
+      },
+      {
+        "id": "post-production",
+        "title": "La post-production",
+        "body": [
+          "Louise intervient en post-production pour ajouter des détails en 2D, comme les paupières ou les pupilles. Ces interventions sont pensées pour s'intégrer pleinement à la matière, en épousant la texture de la laine.",
+          "Nous cherchons à rendre cette étape aussi invisible que possible, afin de préserver la cohérence et la matérialité de l'image."
+        ],
+        "alt": "Main dessinant au stylet sur une tablette graphique, retouchant image par image le visage d'une marionnette"
+      }
+    ]
   },
   "exhibitions": {
     "title": "Expositions",

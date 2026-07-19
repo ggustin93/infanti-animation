@@ -1,0 +1,17 @@
+---
+import MethodologyPage from '../../../components/MethodologyPage.astro';
+import content from '../../../content/en.json';
+---
+
+<MethodologyPage
+  lang="en"
+  backHref="/en"
+  backLabel={content.nav.backToStudio}
+  title={content.methodology.title}
+  metaTitle={content.methodology.metaTitle}
+  description={content.methodology.description}
+  intro={content.methodology.intro}
+  steps={content.methodology.steps}
+  altPathFr="/methodologie"
+  altPathEn="/en/methodology"
+/>

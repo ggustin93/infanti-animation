@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Bilingual methodology page at `/methodologie` (FR) and `/en/methodology` (EN), presenting the five production stages — screenwriting, visual development, fabrication, animation, post-production — as alternating text/photo rows
+- `MethodologyPage` component rendering the five stage photos through `astro:assets` (`src/assets/images/methodologie/`), with a build-time guard that fails with a locale- and step-specific message when `fr.json` and `en.json` drift
+- `BackLink` component extracted from `WorksPage` — shared back-navigation link with an icon and a localized label
+- `methodology` content block (`title`, `metaTitle`, `description`, `intro`, `steps[]` with per-photo `alt`) in `fr.json` and `en.json`
+- `nav.methodology` and `nav.backToStudio` i18n keys, and a Methodology entry in the header navigation
+- `altPathFr` / `altPathEn` props on `Layout` for correct `hreflang` when the FR and EN routes do not share a slug
+
+### Changed
+- `WorksPage` back-link label is now localized via a `backLabel` prop instead of a hardcoded "Studio"
+
+### Fixed
+- Mobile menu stayed open when following a cross-page navigation link — the close handler now matches all `a` elements instead of only `a[href^="#"]`
+- Header logo href carried a trailing slash on EN (`/en/`) conflicting with `trailingSlash: 'never'` — corrected to `/en`
+
 ## [1.1.0] - 2026-03-29
 
 ### Added

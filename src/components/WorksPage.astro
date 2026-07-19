@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import BackLink from './BackLink.astro';
 import WorkCard from './WorkCard.astro';
 import VideoModal from './VideoModal.astro';
 import { works } from '../data/works';
@@ -11,21 +12,17 @@ interface Props {
   metaTitle?: string;
   description: string;
   viewWorkLabel: string;
+  backLabel: string;
 }
 
-const { lang, backHref, title, metaTitle, description, viewWorkLabel } = Astro.props;
+const { lang, backHref, title, metaTitle, description, viewWorkLabel, backLabel } = Astro.props;
 ---
 
 <Layout title={metaTitle ?? title} description={description} lang={lang}>
   <main class="works-page">
     <div class="container">
       <header class="works-page-header">
-        <a href={backHref} class="back-link">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-            <path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          Studio
-        </a>
+        <BackLink href={backHref} label={backLabel} />
         <h1 class="works-page-title">{title}</h1>
       </header>
 
@@ -67,23 +64,6 @@ const { lang, backHref, title, metaTitle, description, viewWorkLabel } = Astro.p
 
   .works-page-header {
     margin-bottom: var(--space-xl);
-  }
-
-  .back-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 0.8125rem;
-    color: var(--color-text-secondary);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    text-decoration: none;
-    margin-bottom: var(--space-md);
-    transition: color 0.3s ease;
-  }
-
-  .back-link:hover {
-    color: var(--color-accent);
   }
 
   .works-page-title {

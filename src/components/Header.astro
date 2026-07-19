@@ -6,12 +6,24 @@ interface Props {
   nav: {
     about: string;
     works: string;
+    methodology: string;
     exhibitions: string;
     contact: string;
   };
 }
 
 const { lang, nav } = Astro.props;
+
+// A missing key renders <a></a> — a link with no accessible name, which builds clean and
+// fails axe `link-name` in production. fr.json and en.json are edited separately, so
+// catch the drift here rather than in a Lighthouse run after deploy.
+const missingNavKeys = (['about', 'works', 'methodology', 'exhibitions', 'contact'] as const).filter(
+  (key) => !nav[key]
+);
+
+if (missingNavKeys.length > 0) {
+  throw new Error(`Header (${lang}): missing nav key(s) ${missingNavKeys.join(', ')} in ${lang}.json → nav.`);
+}
 ---
 
 <header class="header" id="header">
@@ -23,6 +35,7 @@ const { lang, nav } = Astro.props;
     <nav class="header-nav" aria-label="Main navigation">
       <a href="#about">{nav.about}</a>
       <a href="#works">{nav.works}</a>
+      <a href={lang === 'fr' ? '/methodologie' : '/en/methodology'}>{nav.methodology}</a>
       <a href="#exhibitions">{nav.exhibitions}</a>
       <a href="#contact">{nav.contact}</a>
       <LanguageToggle lang={lang} />
@@ -200,7 +213,9 @@ const { lang, nav } = Astro.props;
     });
 
     // Close on nav link click
-    nav.querySelectorAll('a[href^="#"]').forEach((link) => {
+    // All links, not just in-page anchors — cross-page links (e.g. /methodologie)
+    // must close the fullscreen mobile overlay too.
+    nav.querySelectorAll('a').forEach((link) => {
       link.addEventListener('click', () => {
         toggle.setAttribute('aria-expanded', 'false');
         nav.classList.remove('open');

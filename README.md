@@ -56,12 +56,16 @@ infanti-animation/
 │   │   ├── Works.astro          # Homepage featured works section
 │   │   ├── WorkCard.astro
 │   │   ├── WorksPage.astro      # Shared component for /works and /en/works gallery pages
+│   │   ├── MethodologyPage.astro # Shared component for the FR/EN methodology pages
+│   │   ├── BackLink.astro       # Shared back-navigation link (icon + localized label)
 │   │   ├── Exhibitions.astro
 │   │   ├── About.astro
 │   │   ├── Contact.astro
 │   │   ├── Header.astro
 │   │   ├── LanguageToggle.astro
 │   │   └── VideoModal.astro
+│   ├── assets/
+│   │   └── images/     # Imported via astro:assets, optimized to AVIF at build
 │   ├── content/
 │   │   ├── fr.json     # French content
 │   │   └── en.json     # English content
@@ -72,10 +76,14 @@ infanti-animation/
 │   │   ├── index.astro         # FR homepage
 │   │   ├── works/
 │   │   │   └── index.astro     # FR full gallery
+│   │   ├── methodologie/
+│   │   │   └── index.astro     # FR methodology page
 │   │   └── en/
 │   │       ├── index.astro     # EN homepage
-│   │       └── works/
-│   │           └── index.astro # EN full gallery
+│   │       ├── works/
+│   │       │   └── index.astro # EN full gallery
+│   │       └── methodology/
+│   │           └── index.astro # EN methodology page
 │   └── styles/
 ├── astro.config.mjs
 └── tsconfig.json
@@ -95,6 +103,8 @@ The site is available in two languages:
 Content is managed via two separate JSON files in `src/content/`. Language switching is handled by the `LanguageToggle` component in the `Header`.
 
 The i18n configuration in `astro.config.mjs` disables the language prefix for the FR locale (`prefixDefaultLocale: false`), so French is served at the root without any redirect.
+
+Slugs may differ between locales — the methodology page is `/methodologie` in FR but `/en/methodology` in EN. `Layout.astro` normally derives `hreflang` by assuming both locales share a slug, so pages whose slugs diverge must pass `altPathFr` and `altPathEn` explicitly.
 
 ---
 

@@ -1,0 +1,40 @@
+---
+interface Props {
+  href: string;
+  label: string;
+}
+
+const { href, label } = Astro.props;
+
+// The icon is aria-hidden, so an empty label leaves the link with no accessible name —
+// an axe `link-name` failure that would otherwise build and ship silently.
+if (!label) {
+  throw new Error(`BackLink (href="${href}"): empty label. Check nav.backToStudio in the locale JSON.`);
+}
+---
+
+<a href={href} class="back-link">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+    <path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  {label}
+</a>
+
+<style>
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    margin-bottom: var(--space-md);
+    transition: color 0.3s ease;
+  }
+
+  .back-link:hover {
+    color: var(--color-accent);
+  }
+</style>

@@ -1,0 +1,265 @@
+---
+import { Image } from 'astro:assets';
+import Layout from '../layouts/Layout.astro';
+import BackLink from './BackLink.astro';
+import ecritureImg from '../assets/images/methodologie/01-ecriture.jpg';
+import rechercheImg from '../assets/images/methodologie/02-recherche-graphique.jpg';
+import confectionImg from '../assets/images/methodologie/03-confection.jpg';
+import animationImg from '../assets/images/methodologie/04-animation.jpg';
+import postProdImg from '../assets/images/methodologie/05-post-production.jpg';
+
+interface Step {
+  id: string;
+  title: string;
+  body: string[];
+  alt: string;
+}
+
+interface Props {
+  lang: 'fr' | 'en';
+  backHref: string;
+  backLabel: string;
+  title: string;
+  metaTitle: string;
+  description: string;
+  intro: string;
+  steps: Step[];
+  altPathFr: string;
+  altPathEn: string;
+}
+
+const {
+  lang,
+  backHref,
+  backLabel,
+  title,
+  metaTitle,
+  description,
+  intro,
+  steps,
+  altPathFr,
+  altPathEn,
+} = Astro.props;
+
+/*
+ * Keyed by step id, not array position: reordering the steps in one locale only would
+ * otherwise mispair every photo and its alt text while still rendering cleanly.
+ */
+const photos: Record<string, ImageMetadata> = {
+  'ecriture': ecritureImg,
+  'recherche-graphique': rechercheImg,
+  'confection': confectionImg,
+  'animation': animationImg,
+  'post-production': postProdImg,
+};
+
+/*
+ * The JSON content is untyped (plain import, no content collection), so the Step
+ * interface above is documentation, not a build-time contract — and the project has no
+ * `astro check` step. Validate here instead: fr.json and en.json are edited separately
+ * and drift is the realistic failure, so fail loudly with a message that names the
+ * locale and the offending step rather than a downstream `undefined.map`.
+ */
+const photoIds = Object.keys(photos);
+
+if (steps.length !== photoIds.length) {
+  throw new Error(
+    `MethodologyPage (${lang}): content JSON has ${steps.length} steps but ${photoIds.length} photos are imported. ` +
+      `Add or remove an entry in the photos map in MethodologyPage.astro to match.`
+  );
+}
+
+steps.forEach((step, i) => {
+  const missing = [
+    !step?.id && 'id',
+    !step?.title && 'title',
+    !step?.alt && 'alt',
+    !Array.isArray(step?.body) || step.body.length === 0 ? 'body' : null,
+  ].filter(Boolean);
+
+  if (missing.length > 0) {
+    throw new Error(
+      `MethodologyPage (${lang}): step ${i + 1} (${step?.title ?? 'untitled'}) is missing ` +
+        `${missing.join(', ')} in ${lang}.json → methodology.steps[${i}].`
+    );
+  }
+
+  if (!photos[step.id]) {
+    throw new Error(
+      `MethodologyPage (${lang}): step "${step.id}" has no matching photo. ` +
+        `Expected one of: ${photoIds.join(', ')}. Check ${lang}.json → methodology.steps[${i}].id.`
+    );
+  }
+});
+---
+
+<Layout
+  title={metaTitle}
+  description={description}
+  lang={lang}
+  altPathFr={altPathFr}
+  altPathEn={altPathEn}
+>
+  <main class="methodology-page">
+    <div class="container">
+      <header class="methodology-header">
+        <BackLink href={backHref} label={backLabel} />
+        <h1 class="methodology-title">{title}</h1>
+        <p class="methodology-intro">{intro}</p>
+      </header>
+
+      {/*
+        Explicit list roles: `display: grid` on the <li> and `list-style: none` on the
+        <ol> both strip the implicit list semantics in Chrome and Safari. Since the
+        numerals are aria-hidden, this markup is the only ordinal signal left.
+      */}
+      <ol class="steps" role="list">
+        {steps.map((step, index) => (
+          <li role="listitem" class:list={['step', { reveal: index > 0 }]}>
+            <div class="step-text">
+              <span class="step-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+              <h2 class="step-title">{step.title}</h2>
+              {step.body.map((paragraph) => <p>{paragraph}</p>)}
+            </div>
+            <div class="step-media">
+              <Image
+                src={photos[step.id]}
+                width={520}
+                densities={[1, 2]}
+                format="avif"
+                quality={80}
+                alt={step.alt}
+                loading={index === 0 ? 'eager' : 'lazy'}
+              />
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .methodology-page {
+    min-height: 100vh;
+    background: var(--color-bg);
+    padding-top: var(--space-xl);
+    padding-bottom: var(--space-xl);
+  }
+
+  .container {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+  }
+
+  .methodology-header {
+    margin-bottom: var(--space-xl);
+  }
+
+  .methodology-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    color: var(--color-text);
+    font-weight: 400;
+  }
+
+  .methodology-intro {
+    margin-top: var(--space-sm);
+    max-width: 48ch;
+    color: var(--color-text-secondary);
+    font-size: 1.0625rem;
+    line-height: 1.7;
+  }
+
+  .steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  .step {
+    display: grid;
+    gap: var(--space-md);
+    align-items: start;
+  }
+
+  .step-number {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    line-height: 1;
+    color: var(--color-accent);
+    opacity: 0.55;
+    margin-bottom: var(--space-xs);
+  }
+
+  .step-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 3vw, 2.125rem);
+    font-weight: 400;
+    color: var(--color-text);
+    margin-bottom: var(--space-sm);
+  }
+
+  .step-text p {
+    color: var(--color-text-secondary);
+    line-height: 1.8;
+  }
+
+  /* Hairline between paragraphs, matching the About section's editorial rhythm. */
+  .step-text p + p {
+    margin-top: var(--space-sm);
+    padding-top: var(--space-sm);
+    border-top: 1px solid color-mix(in srgb, var(--color-accent) 12%, transparent);
+  }
+
+  /*
+   * The sources are pre-cropped to 3:4 so no bytes are shipped only to be cropped away.
+   * The frame is restated here as a guard: if a photo is ever swapped for one with a
+   * different ratio (the camera-roll originals are still outstanding), the five steps
+   * stay visually consistent and the layout does not shift.
+   */
+  .step-media img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    display: block;
+    border-radius: 2px;
+  }
+
+  @media (min-width: 900px) {
+    .step {
+      grid-template-columns: 6fr 5fr;
+      gap: var(--space-lg);
+      /* Centred: the text blocks are shorter than the 3:4 photos, so aligning to
+         the start would leave a void under every paragraph. */
+      align-items: center;
+    }
+
+    /*
+     * Alternate sides: even steps put the image first, text second. The column
+     * widths flip too, so the text always keeps the wider 6fr track.
+     */
+    .step:nth-child(even) {
+      grid-template-columns: 5fr 6fr;
+    }
+
+    .step:nth-child(even) .step-text {
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    .step:nth-child(even) .step-media {
+      grid-column: 1;
+      grid-row: 1;
+    }
+
+    .step-number {
+      font-size: 3.25rem;
+    }
+  }
+</style>
