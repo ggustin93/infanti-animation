@@ -37,6 +37,9 @@
   "works": {
     "title": "Work",
     "viewWork": "View work",
+    "likeInstagram": "Like on Instagram",
+    "modalLabel": "Video player",
+    "closeVideo": "Close video",
     "seeAll": "See all works",
     "allWorksTitle": "All works",
     "allWorksMetaTitle": "Works — Needle-Felted Stop Motion Animations · Infanti Studio",
@@ -45,7 +48,6 @@
       "home": "Home",
       "breadcrumb": "Works",
       "back": "All works",
-      "watchInstagram": "Watch on Instagram",
       "moreWorks": "More works"
     }
   },

@@ -12,10 +12,11 @@ interface Props {
   year: number;
   index: number;
   viewWorkLabel: string;
+  likeLabel: string;
   detailHref: string;
 }
 
-const { id, title, description, thumbnail, video, externalUrl, year, index, viewWorkLabel, detailHref } = Astro.props;
+const { id, title, description, thumbnail, video, externalUrl, year, index, viewWorkLabel, likeLabel, detailHref } = Astro.props;
 ---
 
 <article class="work-card reveal" style={`--delay: ${index * 0.1}s`}>
@@ -54,14 +55,11 @@ const { id, title, description, thumbnail, video, externalUrl, year, index, view
         href={externalUrl}
         target="_blank"
         rel="noopener noreferrer"
-        class="work-instagram"
-        aria-label={`${viewWorkLabel} — ${title} — Instagram`}
-        onclick="event.stopPropagation()"
+        class="work-like"
+        aria-label={`${likeLabel} — ${title}`}
       >
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="2" y="2" width="20" height="20" rx="5" />
-          <circle cx="12" cy="12" r="5" />
-          <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
+        <svg class="work-heart" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21.2l7.8-7.7 1-1.1a5.5 5.5 0 0 0 0-7.8z" />
         </svg>
       </a>
     </div>
@@ -178,15 +176,45 @@ const { id, title, description, thumbnail, video, externalUrl, year, index, view
     letter-spacing: 0.05em;
   }
 
-  .work-instagram {
+  /* The heart fills on hover — a preview of the gesture it invites. */
+  .work-like {
     color: var(--color-text-secondary);
     display: flex;
     align-items: center;
+    border-radius: 2px;
     transition: color 0.3s ease;
   }
 
-  .work-instagram:hover {
+  .work-heart {
+    fill: transparent;
+    transition: fill 0.3s ease, transform 0.3s ease;
+  }
+
+  .work-like:hover,
+  .work-like:focus-visible {
     color: var(--color-accent);
+  }
+
+  .work-like:hover .work-heart,
+  .work-like:focus-visible .work-heart {
+    fill: currentColor;
+    transform: scale(1.12);
+  }
+
+  .work-like:focus-visible {
+    outline: 1px solid var(--color-accent);
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .work-heart {
+      transition: fill 0.3s ease;
+    }
+
+    .work-like:hover .work-heart,
+    .work-like:focus-visible .work-heart {
+      transform: none;
+    }
   }
 </style>
 

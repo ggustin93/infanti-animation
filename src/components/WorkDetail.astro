@@ -100,14 +100,12 @@ const schema = [breadcrumbSchema, ...(videoSchema ? [videoSchema] : [])];
             href={work.externalUrl}
             target="_blank"
             rel="noopener noreferrer"
-            class="ig-link"
+            class="like-link"
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <rect x="2" y="2" width="20" height="20" rx="5" />
-              <circle cx="12" cy="12" r="5" />
-              <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
+            <svg class="like-heart" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21.2l7.8-7.7 1-1.1a5.5 5.5 0 0 0 0-7.8z" />
             </svg>
-            {labels.watchInstagram}
+            {content.works.likeInstagram}
           </a>
         </div>
       </article>
@@ -221,7 +219,7 @@ const schema = [breadcrumbSchema, ...(videoSchema ? [videoSchema] : [])];
     max-width: 52ch;
   }
 
-  .ig-link {
+  .like-link {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
@@ -235,9 +233,38 @@ const schema = [breadcrumbSchema, ...(videoSchema ? [videoSchema] : [])];
     transition: color 0.3s ease, border-color 0.3s ease;
   }
 
-  .ig-link:hover {
+  .like-heart {
+    fill: transparent;
+    transition: fill 0.3s ease, transform 0.3s ease;
+  }
+
+  .like-link:hover,
+  .like-link:focus-visible {
     color: var(--color-accent);
     border-color: var(--color-accent);
+  }
+
+  .like-link:hover .like-heart,
+  .like-link:focus-visible .like-heart {
+    fill: currentColor;
+    transform: scale(1.12);
+  }
+
+  .like-link:focus-visible {
+    outline: 1px solid var(--color-accent);
+    outline-offset: 4px;
+    border-radius: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .like-heart {
+      transition: fill 0.3s ease;
+    }
+
+    .like-link:hover .like-heart,
+    .like-link:focus-visible .like-heart {
+      transform: none;
+    }
   }
 
   .more-works {

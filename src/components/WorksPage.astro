@@ -12,10 +12,13 @@ interface Props {
   metaTitle?: string;
   description: string;
   viewWorkLabel: string;
+  likeLabel: string;
+  modalLabel: string;
+  closeLabel: string;
   backLabel: string;
 }
 
-const { lang, backHref, title, metaTitle, description, viewWorkLabel, backLabel } = Astro.props;
+const { lang, backHref, title, metaTitle, description, viewWorkLabel, likeLabel, modalLabel, closeLabel, backLabel } = Astro.props;
 ---
 
 <Layout title={metaTitle ?? title} description={description} lang={lang}>
@@ -38,13 +41,14 @@ const { lang, backHref, title, metaTitle, description, viewWorkLabel, backLabel 
             year={work.year}
             index={index}
             viewWorkLabel={viewWorkLabel}
+            likeLabel={likeLabel}
             detailHref={`${lang === 'fr' ? '' : '/en'}/works/${work.id}`}
           />
         ))}
       </div>
     </div>
 
-    <VideoModal />
+    <VideoModal likeLabel={likeLabel} modalLabel={modalLabel} closeLabel={closeLabel} />
   </main>
 </Layout>
 

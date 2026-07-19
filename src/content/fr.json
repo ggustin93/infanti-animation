@@ -37,6 +37,9 @@
   "works": {
     "title": "Œuvres",
     "viewWork": "Voir l'œuvre",
+    "likeInstagram": "J'aime sur Instagram",
+    "modalLabel": "Lecteur vidéo",
+    "closeVideo": "Fermer la vidéo",
     "seeAll": "Voir toutes les œuvres",
     "allWorksTitle": "Toutes les œuvres",
     "allWorksMetaTitle": "Œuvres — Animations Stop Motion en Laine Feutrée · Infanti Studio",
@@ -45,7 +48,6 @@
       "home": "Accueil",
       "breadcrumb": "Œuvres",
       "back": "Toutes les œuvres",
-      "watchInstagram": "Voir sur Instagram",
       "moreWorks": "Autres œuvres"
     }
   },

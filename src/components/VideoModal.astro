@@ -1,14 +1,24 @@
+---
+interface Props {
+  likeLabel: string;
+  modalLabel: string;
+  closeLabel: string;
+}
+
+const { likeLabel, modalLabel, closeLabel } = Astro.props;
+---
+
 <div
   id="video-modal"
   class="modal"
   role="dialog"
   aria-modal="true"
-  aria-label="Video player"
+  aria-label={modalLabel}
   inert
 >
   <div class="modal-backdrop" id="modal-backdrop"></div>
   <div class="modal-container">
-    <button class="modal-close" id="modal-close" aria-label="Close video">
+    <button class="modal-close" id="modal-close" aria-label={closeLabel}>
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
         <line x1="18" y1="6" x2="6" y2="18" />
         <line x1="6" y1="6" x2="18" y2="18" />
@@ -22,18 +32,16 @@
       <div class="modal-actions">
         <span id="modal-year" class="modal-year"></span>
         <a
-          id="modal-instagram"
+          id="modal-like"
           href="#"
           target="_blank"
           rel="noopener noreferrer"
-          class="modal-instagram-link"
+          class="modal-like-link"
         >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="2" y="2" width="20" height="20" rx="5" />
-            <circle cx="12" cy="12" r="5" />
-            <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
+          <svg class="modal-heart" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21.2l7.8-7.7 1-1.1a5.5 5.5 0 0 0 0-7.8z" />
           </svg>
-          Instagram
+          {likeLabel}
         </a>
       </div>
     </div>
@@ -143,18 +151,36 @@
     letter-spacing: 0.05em;
   }
 
-  .modal-instagram-link {
+  .modal-like-link {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
     font-size: 0.75rem;
     color: var(--color-text-secondary);
     text-decoration: none;
     transition: color 0.3s ease;
   }
 
-  .modal-instagram-link:hover {
+  .modal-heart {
+    fill: transparent;
+    transition: fill 0.3s ease, transform 0.3s ease;
+  }
+
+  .modal-like-link:hover,
+  .modal-like-link:focus-visible {
     color: var(--color-accent);
+  }
+
+  .modal-like-link:hover .modal-heart,
+  .modal-like-link:focus-visible .modal-heart {
+    fill: currentColor;
+    transform: scale(1.12);
+  }
+
+  .modal-like-link:focus-visible {
+    outline: 1px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 2px;
   }
 
   /* Mobile: slide from bottom */
@@ -182,6 +208,15 @@
     .modal-container {
       transition: none;
     }
+
+    .modal-heart {
+      transition: fill 0.3s ease;
+    }
+
+    .modal-like-link:hover .modal-heart,
+    .modal-like-link:focus-visible .modal-heart {
+      transform: none;
+    }
   }
 </style>
 
@@ -193,7 +228,7 @@
     const modalVideo = document.getElementById('modal-video') as HTMLVideoElement | null;
     const titleEl = document.getElementById('modal-title');
     const yearEl = document.getElementById('modal-year');
-    const igLink = document.getElementById('modal-instagram') as HTMLAnchorElement | null;
+    const igLink = document.getElementById('modal-like') as HTMLAnchorElement | null;
 
     if (!modal || !modalVideo) return;
     let activeCardId: string | null = null;
