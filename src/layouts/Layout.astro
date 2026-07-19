@@ -6,10 +6,82 @@ interface Props {
   title: string;
   description: string;
   lang: string;
+  /** Absolute URL of a page-specific social image. Falls back to the shared og-image. */
+  image?: string;
+  /** og:type override (e.g. "video.other" for a work page). Defaults to "website". */
+  ogType?: string;
+  /** Page-specific JSON-LD (object or array) injected in addition to the site-wide graph. */
+  schema?: Record<string, unknown> | Record<string, unknown>[];
 }
 
-const { title, description, lang } = Astro.props;
-const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://infanti.studio');
+const { title, description, lang, image, ogType = 'website', schema } = Astro.props;
+
+const site = Astro.site ?? new URL('https://infanti.studio');
+const canonicalUrl = new URL(Astro.url.pathname, site);
+
+// Compute the FR/EN counterparts of the current page for correct per-page hreflang.
+const path = Astro.url.pathname;
+const isEn = path === '/en' || path.startsWith('/en/');
+const basePath = isEn ? (path === '/en' ? '' : path.slice(3)) : (path === '/' ? '' : path);
+const frHref = new URL(basePath || '/', site).href;
+const enHref = new URL('/en' + basePath, site).href;
+
+const ogImage = image ?? new URL('/og-image.jpg', site).href;
+const useDefaultImage = !image;
+
+// Site-wide entity graph — strengthens brand disambiguation and knowledge-panel signals.
+const siteGraph = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': 'https://infanti.studio/#organization',
+      name: 'Infanti Studio',
+      url: 'https://infanti.studio',
+      logo: 'https://infanti.studio/og-image.jpg',
+      email: 'hello@infanti.studio',
+      telephone: '+32496042690',
+      foundingDate: '2024-01',
+      address: { '@type': 'PostalAddress', addressCountry: 'BE' },
+      areaServed: 'BE',
+      founder: [
+        { '@id': 'https://infanti.studio/#louise' },
+        { '@id': 'https://infanti.studio/#margot' },
+      ],
+      sameAs: [
+        'https://www.instagram.com/margot.infanti/',
+        'https://www.instagram.com/louise_infanti/',
+        'https://www.tiktok.com/@inf.sisters',
+      ],
+    },
+    {
+      '@type': 'WebSite',
+      '@id': 'https://infanti.studio/#website',
+      url: 'https://infanti.studio',
+      name: 'Infanti Studio',
+      inLanguage: ['fr', 'en'],
+      publisher: { '@id': 'https://infanti.studio/#organization' },
+    },
+    {
+      '@type': 'Person',
+      '@id': 'https://infanti.studio/#louise',
+      name: 'Louise Infanti',
+      jobTitle: 'Illustrator & stop motion animator',
+      worksFor: { '@id': 'https://infanti.studio/#organization' },
+      sameAs: ['https://www.instagram.com/louise_infanti/'],
+    },
+    {
+      '@type': 'Person',
+      '@id': 'https://infanti.studio/#margot',
+      name: 'Margot Infanti',
+      jobTitle: 'Director & stop motion animator',
+      worksFor: { '@id': 'https://infanti.studio/#organization' },
+      sameAs: ['https://www.instagram.com/margot.infanti/'],
+    },
+  ],
+};
+
+const pageSchemas = schema ? (Array.isArray(schema) ? schema : [schema]) : [];
 ---
 
 <!doctype html>
@@ -20,27 +92,27 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://infanti.
     <meta name="description" content={description} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="canonical" href={canonicalUrl.href} />
-    <link rel="alternate" hreflang="fr" href="https://infanti.studio/" />
-    <link rel="alternate" hreflang="en" href="https://infanti.studio/en" />
-    <link rel="alternate" hreflang="x-default" href="https://infanti.studio/" />
+    <link rel="alternate" hreflang="fr" href={frHref} />
+    <link rel="alternate" hreflang="en" href={enHref} />
+    <link rel="alternate" hreflang="x-default" href={frHref} />
 
     <!-- Open Graph -->
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
     <meta property="og:url" content={canonicalUrl.href} />
     <meta property="og:locale" content={lang === 'fr' ? 'fr_BE' : 'en_US'} />
     <meta property="og:locale:alternate" content={lang === 'fr' ? 'en_US' : 'fr_BE'} />
-    <meta property="og:image" content="https://infanti.studio/og-image.jpg" />
+    <meta property="og:image" content={ogImage} />
     <meta property="og:image:alt" content={title} />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
+    {useDefaultImage && <meta property="og:image:width" content="1200" />}
+    {useDefaultImage && <meta property="og:image:height" content="630" />}
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content="https://infanti.studio/og-image.jpg" />
+    <meta name="twitter:image" content={ogImage} />
     <meta name="twitter:image:alt" content={title} />
 
     <!-- Self-hosted fonts: preload critical subsets -->
@@ -54,22 +126,11 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://infanti.
     <!-- Umami Analytics (privacy-friendly, no cookies) -->
     <script defer src="https://cloud.umami.is/script.js" data-website-id="6d5ee3d8-84fe-4397-a525-f470ea80bf7a"></script>
 
-    <!-- Organization JSON-LD -->
-    <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "Infanti Studio",
-  "url": "https://infanti.studio",
-  "logo": "https://infanti.studio/favicon.svg",
-  "email": "minfanti@hotmail.fr",
-  "sameAs": [
-    "https://www.instagram.com/margot.infanti/",
-    "https://www.instagram.com/louise_infanti/",
-    "https://www.tiktok.com/@inf.sisters"
-  ]
-}
-    </script>
+    <!-- Site-wide entity graph: Organization + WebSite + Persons -->
+    <script type="application/ld+json" set:html={JSON.stringify(siteGraph)} />
+    {pageSchemas.map((s) => (
+      <script type="application/ld+json" set:html={JSON.stringify(s)} />
+    ))}
   </head>
   <body>
     <slot />

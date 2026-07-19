@@ -37,7 +37,15 @@
     "viewWork": "Voir l'œuvre",
     "seeAll": "Voir toutes les œuvres",
     "allWorksTitle": "Toutes les œuvres",
-    "allWorksDescription": "L'ensemble des animations stop motion du Studio Infanti."
+    "allWorksMetaTitle": "Œuvres — Animations Stop Motion en Laine Feutrée · Infanti Studio",
+    "allWorksDescription": "Découvrez toutes les animations en stop motion de Louise & Margot Infanti, réalisées à la main en laine feutrée à l'aiguille.",
+    "detail": {
+      "home": "Accueil",
+      "breadcrumb": "Œuvres",
+      "back": "Toutes les œuvres",
+      "watchInstagram": "Voir sur Instagram",
+      "moreWorks": "Autres œuvres"
+    }
   },
   "exhibitions": {
     "title": "Expositions",
@@ -47,7 +55,7 @@
   },
   "contact": {
     "title": "Contact",
-    "email": "minfanti@hotmail.fr",
+    "email": "hello@infanti.studio",
     "phone": "0496 04 26 90",
     "followUs": "Suivez-nous",
     "copyright": "© 2024–2026 Louise & Margot Infanti. Tous droits réservés.",

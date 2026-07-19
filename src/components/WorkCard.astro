@@ -12,9 +12,10 @@ interface Props {
   year: number;
   index: number;
   viewWorkLabel: string;
+  detailHref: string;
 }
 
-const { id, title, description, thumbnail, video, externalUrl, year, index, viewWorkLabel } = Astro.props;
+const { id, title, description, thumbnail, video, externalUrl, year, index, viewWorkLabel, detailHref } = Astro.props;
 ---
 
 <article class="work-card reveal" style={`--delay: ${index * 0.1}s`}>
@@ -28,7 +29,7 @@ const { id, title, description, thumbnail, video, externalUrl, year, index, view
     data-card-id={id}
   >
     <div class="work-thumbnail">
-      <Image src={thumbnail} width={400} densities={[1, 2]} format="avif" quality={75} alt={title} loading="lazy" />
+      <Image src={thumbnail} width={400} densities={[1, 2]} format="avif" quality={75} alt={`${title} — stop motion animation by Infanti Studio`} loading="lazy" />
       {video && (
         <video class="work-video" id={`preview-${id}`} muted loop playsinline preload="none">
           <source src={video.replace('.mp4', '.webm')} type="video/webm" />
@@ -46,7 +47,7 @@ const { id, title, description, thumbnail, video, externalUrl, year, index, view
   </button>
 
   <div class="work-info">
-    <h3 class="work-title">{title}</h3>
+    <h3 class="work-title"><a href={detailHref} class="work-title-link">{title}</a></h3>
     <div class="work-meta">
       <span class="work-year">{year}</span>
       <a
@@ -159,6 +160,16 @@ const { id, title, description, thumbnail, video, externalUrl, year, index, view
     font-size: 1rem;
     font-family: var(--font-display);
     color: var(--color-text);
+  }
+
+  .work-title-link {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .work-title-link:hover {
+    color: var(--color-accent);
   }
 
   .work-year {

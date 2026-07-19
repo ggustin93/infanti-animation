@@ -16,6 +16,13 @@ export default defineConfig({
     },
   },
 
-  integrations: [sitemap()],
+  integrations: [
+    sitemap({
+      i18n: {
+        defaultLocale: 'fr',
+        locales: { fr: 'fr-BE', en: 'en-US' },
+      },
+    }),
+  ],
   adapter: vercel(),
 });

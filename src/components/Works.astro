@@ -32,6 +32,7 @@ const locale = lang as 'fr' | 'en';
           year={work.year}
           index={index}
           viewWorkLabel={content.viewWork}
+          detailHref={`${locale === 'fr' ? '' : '/en'}/works/${work.id}`}
         />
       ))}
     </div>

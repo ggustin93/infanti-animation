@@ -8,14 +8,15 @@ interface Props {
   lang: 'fr' | 'en';
   backHref: string;
   title: string;
+  metaTitle?: string;
   description: string;
   viewWorkLabel: string;
 }
 
-const { lang, backHref, title, description, viewWorkLabel } = Astro.props;
+const { lang, backHref, title, metaTitle, description, viewWorkLabel } = Astro.props;
 ---
 
-<Layout title={title} description={description} lang={lang}>
+<Layout title={metaTitle ?? title} description={description} lang={lang}>
   <main class="works-page">
     <div class="container">
       <header class="works-page-header">
@@ -40,6 +41,7 @@ const { lang, backHref, title, description, viewWorkLabel } = Astro.props;
             year={work.year}
             index={index}
             viewWorkLabel={viewWorkLabel}
+            detailHref={`${lang === 'fr' ? '' : '/en'}/works/${work.id}`}
           />
         ))}
       </div>

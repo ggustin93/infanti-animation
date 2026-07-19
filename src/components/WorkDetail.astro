@@ -1,0 +1,316 @@
+---
+import { Image } from 'astro:assets';
+import Layout from '../layouts/Layout.astro';
+import { works, type Work } from '../data/works';
+
+interface Props {
+  work: Work;
+  lang: 'fr' | 'en';
+  content: typeof import('../content/fr.json');
+}
+
+const { work, lang, content } = Astro.props;
+const labels = content.works.detail;
+
+const site = Astro.site ?? new URL('https://infanti.studio');
+const prefix = lang === 'fr' ? '' : '/en';
+const worksHref = `${prefix}/works`;
+const homeHref = lang === 'fr' ? '/' : '/en';
+
+const title = work.title[lang];
+const description = work.description[lang];
+const metaTitle = `${title} — Infanti Studio`;
+
+const canonical = new URL(`${prefix}/works/${work.id}`, site).href;
+const posterUrl = new URL(work.thumbnail.src, site).href;
+const mp4Url = work.video ? new URL(work.video, site).href : undefined;
+const webmUrl = work.video ? work.video.replace('.mp4', '.webm') : undefined;
+
+const otherWorks = works.filter((w) => w.id !== work.id);
+
+const videoSchema = work.video
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'VideoObject',
+      name: title,
+      description,
+      thumbnailUrl: posterUrl,
+      contentUrl: mp4Url,
+      uploadDate: `${work.year}-01-01`,
+      inLanguage: lang,
+      creator: { '@id': 'https://infanti.studio/#organization' },
+      publisher: { '@id': 'https://infanti.studio/#organization' },
+    }
+  : undefined;
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: labels.home, item: new URL(homeHref, site).href },
+    { '@type': 'ListItem', position: 2, name: labels.breadcrumb, item: new URL(worksHref, site).href },
+    { '@type': 'ListItem', position: 3, name: title, item: canonical },
+  ],
+};
+
+const schema = [breadcrumbSchema, ...(videoSchema ? [videoSchema] : [])];
+---
+
+<Layout
+  title={metaTitle}
+  description={description}
+  lang={lang}
+  image={posterUrl}
+  ogType="video.other"
+  schema={schema}
+>
+  <main class="work-detail">
+    <div class="container">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href={homeHref}>{labels.home}</a>
+        <span aria-hidden="true">/</span>
+        <a href={worksHref}>{labels.breadcrumb}</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">{title}</span>
+      </nav>
+
+      <article class="work-article">
+        <div class="work-player">
+          {work.video ? (
+            <video
+              class="detail-video"
+              controls
+              playsinline
+              preload="metadata"
+              poster={posterUrl}
+            >
+              <source src={webmUrl} type="video/webm" />
+              <source src={mp4Url} type="video/mp4" />
+            </video>
+          ) : (
+            <Image src={work.thumbnail} width={720} format="avif" quality={80} alt={`${title} — stop motion animation by Infanti Studio`} />
+          )}
+        </div>
+
+        <div class="work-body">
+          <h1 class="work-heading">{title}</h1>
+          <p class="work-year">{work.year}</p>
+          <p class="work-desc">{description}</p>
+          <a
+            href={work.externalUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="ig-link"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="2" y="2" width="20" height="20" rx="5" />
+              <circle cx="12" cy="12" r="5" />
+              <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
+            </svg>
+            {labels.watchInstagram}
+          </a>
+        </div>
+      </article>
+
+      <section class="more-works" aria-label={labels.moreWorks}>
+        <h2 class="more-title">{labels.moreWorks}</h2>
+        <ul class="more-grid">
+          {otherWorks.map((w) => (
+            <li>
+              <a href={`${prefix}/works/${w.id}`} class="more-card">
+                <div class="more-thumb">
+                  <Image src={w.thumbnail} width={280} densities={[1, 2]} format="avif" quality={70} alt={`${w.title[lang]} — stop motion animation by Infanti Studio`} loading="lazy" />
+                </div>
+                <span class="more-name">{w.title[lang]}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <a href={worksHref} class="back-link">← {labels.back}</a>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .work-detail {
+    min-height: 100vh;
+    background: var(--color-bg);
+    padding-top: var(--space-xl);
+    padding-bottom: var(--space-xl);
+  }
+
+  .container {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+  }
+
+  .breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-lg);
+  }
+
+  .breadcrumb a {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .breadcrumb a:hover {
+    color: var(--color-accent);
+  }
+
+  .work-article {
+    display: grid;
+    gap: var(--space-lg);
+    align-items: start;
+  }
+
+  @media (min-width: 900px) {
+    .work-article {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: var(--space-xl);
+    }
+  }
+
+  .work-player {
+    border-radius: 4px;
+    overflow: hidden;
+    background: #000;
+  }
+
+  .detail-video,
+  .work-player :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 80vh;
+    object-fit: contain;
+    aspect-ratio: 9 / 16;
+    margin: 0 auto;
+  }
+
+  .work-heading {
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 4vw, 3rem);
+    color: var(--color-text);
+    font-weight: 400;
+    margin-bottom: var(--space-xs);
+  }
+
+  .work-year {
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+    letter-spacing: 0.1em;
+    margin-bottom: var(--space-md);
+  }
+
+  .work-desc {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: var(--color-text);
+    margin-bottom: var(--space-lg);
+    max-width: 52ch;
+  }
+
+  .ig-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8125rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-text-secondary) 30%, transparent);
+    padding-bottom: 2px;
+    transition: color 0.3s ease, border-color 0.3s ease;
+  }
+
+  .ig-link:hover {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+
+  .more-works {
+    margin-top: var(--space-xl);
+    padding-top: var(--space-lg);
+    border-top: 1px solid rgba(245, 240, 232, 0.06);
+  }
+
+  .more-title {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    color: var(--color-text);
+    font-weight: 400;
+    margin-bottom: var(--space-md);
+  }
+
+  .more-grid {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 140px), 1fr));
+    gap: var(--space-md);
+    padding: 0;
+    margin: 0;
+  }
+
+  .more-card {
+    display: block;
+    text-decoration: none;
+    color: var(--color-text);
+  }
+
+  .more-thumb {
+    aspect-ratio: 4 / 5;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: var(--space-xs);
+    background: #141414;
+  }
+
+  .more-thumb :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+
+  .more-card:hover .more-thumb :global(img) {
+    transform: scale(1.04);
+  }
+
+  .more-name {
+    font-family: var(--font-display);
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    transition: color 0.3s ease;
+  }
+
+  .more-card:hover .more-name {
+    color: var(--color-accent);
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-top: var(--space-xl);
+    font-size: 0.8125rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .back-link:hover {
+    color: var(--color-accent);
+  }
+</style>

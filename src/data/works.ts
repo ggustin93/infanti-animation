@@ -23,12 +23,12 @@ export const works: Work[] = [
   {
     id: 'dreamcore',
     title: {
-      fr: '🌺🦷',
-      en: '🌺🦷',
+      fr: 'Dreamcore',
+      en: 'Dreamcore',
     },
     description: {
-      fr: '',
-      en: '',
+      fr: 'Une rêverie surréaliste en laine feutrée à l\'aiguille : fleurs, dents et symboles oniriques dans une esthétique dreamcore, animés image par image.',
+      en: 'A surreal needle-felted daydream — flowers, teeth and dream symbols in a dreamcore aesthetic, animated frame by frame.',
     },
     thumbnail: dreamcoreThumb,
     video: '/videos/works/dreamcore.mp4',
@@ -39,12 +39,12 @@ export const works: Work[] = [
   {
     id: 'pig-loop',
     title: {
-      fr: '🐽',
-      en: '🐽',
+      fr: 'Petit Cochon',
+      en: 'Pig Loop',
     },
     description: {
-      fr: '',
-      en: '',
+      fr: 'Une boucle d\'animation hypnotique en stop motion mettant en scène un petit cochon en laine feutrée à l\'aiguille.',
+      en: 'A hypnotic looping stop motion animation featuring a small needle-felted pig.',
     },
     thumbnail: pigLoopThumb,
     video: '/videos/works/pig-loop.mp4',
@@ -55,12 +55,12 @@ export const works: Work[] = [
   {
     id: 'frog-magic',
     title: {
-      fr: '🐸✨',
-      en: '🐸✨',
+      fr: 'Grenouille Magique',
+      en: 'Magic Frog',
     },
     description: {
-      fr: '',
-      en: '',
+      fr: 'Une grenouille en laine feutrée déploie un tour de magie scintillant, animée image par image en stop motion.',
+      en: 'A needle-felted frog conjures a shimmer of magic, brought to life frame by frame in stop motion.',
     },
     thumbnail: frogMagicThumb,
     video: '/videos/works/frog-magic.mp4',
@@ -107,8 +107,8 @@ export const works: Work[] = [
       en: 'POV: apartment hunting',
     },
     description: {
-      fr: 'Pov : looking for an affordable apartment 👁️🏡👁️',
-      en: 'Pov : looking for an affordable apartment 👁️🏡👁️',
+      fr: 'POV : à la recherche d\'un appartement abordable. Une satire douce-amère du marché locatif, en stop motion et laine feutrée.',
+      en: 'POV: hunting for an affordable apartment. A bittersweet stop motion take on the rental market, crafted in needle-felted wool.',
     },
     thumbnail: apartmentThumb,
     video: '/videos/works/apartment.mp4',

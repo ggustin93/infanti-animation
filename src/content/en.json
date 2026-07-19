@@ -37,7 +37,15 @@
     "viewWork": "View work",
     "seeAll": "See all works",
     "allWorksTitle": "All works",
-    "allWorksDescription": "The complete stop motion animation work of Infanti Studio."
+    "allWorksMetaTitle": "Works — Needle-Felted Stop Motion Animations · Infanti Studio",
+    "allWorksDescription": "Browse every stop motion animation by Louise & Margot Infanti, handcrafted from needle-felted wool.",
+    "detail": {
+      "home": "Home",
+      "breadcrumb": "Works",
+      "back": "All works",
+      "watchInstagram": "Watch on Instagram",
+      "moreWorks": "More works"
+    }
   },
   "exhibitions": {
     "title": "Exhibitions",
@@ -47,7 +55,7 @@
   },
   "contact": {
     "title": "Contact",
-    "email": "minfanti@hotmail.fr",
+    "email": "hello@infanti.studio",
     "phone": "0496 04 26 90",
     "followUs": "Follow us",
     "copyright": "© 2024–2026 Louise & Margot Infanti. All rights reserved.",

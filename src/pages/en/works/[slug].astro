@@ -1,0 +1,13 @@
+---
+import WorkDetail from '../../../components/WorkDetail.astro';
+import { works } from '../../../data/works';
+import content from '../../../content/en.json';
+
+export function getStaticPaths() {
+  return works.map((work) => ({ params: { slug: work.id }, props: { work } }));
+}
+
+const { work } = Astro.props;
+---
+
+<WorkDetail work={work} lang="en" content={content} />
