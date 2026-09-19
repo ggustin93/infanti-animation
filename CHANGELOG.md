@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Exhibition posts at `/expositions/[slug]` (FR) and `/en/exhibitions/[slug]` (EN) for *Laine des Songes — Puppet in the City* (Uccle, 18–20 Sept 2026) and *ARCHIVES: whimsy* (Lafayette, 12 July 2025), each with a photo/poster, bilingual copy, `ExhibitionEvent` + `BreadcrumbList` JSON-LD and per-page `hreflang`
+- `ExhibitionPost` component and `src/data/exhibitions.ts` (typed FR/EN catalogue, same pattern as `works.ts`)
+- Optional `keywords` field on works, filled from the Instagram hashtags by `download-reel.sh` and emitted in the `VideoObject` JSON-LD
+- Work *Presque Parfait* / *Almost Perfectly Done* (`ice-cream`, Instagram post of 21 Aug 2026)
 - Individual work detail pages at `/works/[slug]` (FR) and `/en/works/[slug]` (EN) — crawlable, indexable pages per work with video, description, breadcrumb, and internal links to the rest of the catalogue (previously works only opened a modal + linked to Instagram)
 - `WorkDetail` component emitting `VideoObject` and `BreadcrumbList` JSON-LD per work page (eligible for Google video rich results)
 - Site-wide structured-data `@graph` on every page — `Organization` (with founders, `foundingDate`, address, telephone, raster logo), `WebSite`, and a `Person` entity for each sister — strengthening brand disambiguation
@@ -22,12 +26,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `altPathFr` / `altPathEn` props on `Layout` for correct `hreflang` when the FR and EN routes do not share a slug
 
 ### Changed
+- Home Exhibitions section rebuilt from a single hard-coded card into a compact editorial list driven by `exhibitions.ts` (year, title, place, summary, thumbnail; whole row links to the post, external link kept alongside); `exhibitions` i18n block reduced to `title`, `readMore`, `backLabel`
+- Instagram consolidated on `@infanti.studio`: one Contact link, one Organization `sameAs` entry; the two personal profiles are no longer linked and the Person entities lose their Instagram `sameAs`
+- `fetch-latest-reels.sh` now defaults to the `infanti.studio` profile
+- Archives Exhibitions link now targets the artist page on the Wix site
 - `hreflang` tags are now computed per page from the current path (were hardcoded to the homepage on every page, so `/works` etc. declared the wrong alternates)
 - Sitemap now emits `xhtml:link` language alternates via the `@astrojs/sitemap` `i18n` option
 - Bare `Organization` JSON-LD replaced by a full entity graph; `logo` switched from the SVG favicon to a raster image
 - Work cards link to their detail page via a crawlable title link; image `alt` is now descriptive instead of the bare title
 - Gallery page `<title>` gains a keyword + brand suffix (was just "All works" / "Toutes les œuvres")
 - `WorksPage` back-link label is now localized via a `backLabel` prop instead of a hardcoded "Studio"
+
+### Known issues
+- `fetch-latest-reels.sh` cannot list the Instagram profile: yt-dlp's profile extractor is marked broken upstream (still failing on 2026.08.19). `download-reel.sh` works on individual post URLs.
 
 ### Fixed
 - Emoji-only work titles (`🌺🦷`, `🐽`, `🐸✨`), empty descriptions, and one mistranslated `apartment` description in `works.ts` replaced with real bilingual copy (drafts pending studio review)
