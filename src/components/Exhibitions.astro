@@ -1,110 +1,232 @@
 ---
+import { Image } from 'astro:assets';
+import { exhibitions, exhibitionPath } from '../data/exhibitions';
+
 interface Props {
+  lang: 'fr' | 'en';
   content: {
     title: string;
-    archivesTitle: string;
-    archivesDescription: string;
-    visitLink: string;
+    readMore: string;
   };
 }
 
-const { content } = Astro.props;
+const { lang, content } = Astro.props;
 ---
 
 <section class="exhibitions" id="exhibitions">
   <div class="container">
     <h2 class="section-title reveal">{content.title}</h2>
 
-    <div class="exhibition-card reveal">
-      <div class="exhibition-badge" aria-hidden="true">
-        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5">
-          <rect x="4" y="8" width="32" height="24" rx="2" />
-          <path d="M4 14h32" />
-          <path d="M12 8V6M20 8V6M28 8V6" />
-        </svg>
-      </div>
-      <div class="exhibition-info">
-        <h3>{content.archivesTitle}</h3>
-        <p>{content.archivesDescription}</p>
-        <div class="exhibition-links">
-          <a
-            href="https://www.archivesexhibitions.org/artists/margot-infanti"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="exhibition-link"
-          >
-            {content.visitLink}
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-              <path d="M6 3h7v7M13 3L5 11" />
-            </svg>
-          </a>
-        </div>
-      </div>
-    </div>
+    {/* Explicit roles: `display: grid` on the <li> strips list semantics in Safari. */}
+    <ul class="exhibition-list" role="list">
+      {exhibitions.map((exhibition) => (
+        <li class="exhibition reveal" role="listitem">
+          <div class="exhibition-when">
+            <span class="exhibition-year">{exhibition.year}</span>
+            {exhibition.dateShort && <span class="exhibition-date">{exhibition.dateShort[lang]}</span>}
+          </div>
+
+          <div class="exhibition-body">
+            <h3>{exhibition.title[lang]}</h3>
+            <p class="exhibition-place">{exhibition.place[lang]}</p>
+            <p class="exhibition-summary">{exhibition.summary[lang]}</p>
+            <div class="exhibition-links">
+              {/* Stretched link: the whole row opens the post; the external link sits above it. */}
+              <a href={exhibitionPath(exhibition.id, lang)} class="exhibition-more">
+                {content.readMore}
+                <span class="sr-only"> — {exhibition.title[lang]}</span>
+              </a>
+              <a
+                href={exhibition.externalUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="exhibition-external"
+              >
+                {exhibition.externalLabel[lang]}
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <path d="M6 3h7v7M13 3L5 11" />
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          <div class="exhibition-thumb" aria-hidden="true">
+            <Image
+              src={exhibition.image}
+              width={112}
+              densities={[1, 2]}
+              format="avif"
+              quality={70}
+              alt=""
+              loading="lazy"
+            />
+          </div>
+        </li>
+      ))}
+    </ul>
   </div>
 </section>
 
 <style>
   .exhibitions {
-    /* bg, not surface: the methodology teaser above now takes the surface band,
+    /* bg, not surface: the methodology teaser above takes the surface band,
        keeping the page alternating surface/bg/surface/bg down its length. */
     background: var(--color-bg);
   }
 
-  .exhibition-card {
-    display: flex;
+  .exhibition-list {
+    list-style: none;
+    max-width: 56rem;
+    border-top: 1px solid rgba(212, 168, 83, 0.14);
+  }
+
+  .exhibition {
+    position: relative;
+    display: grid;
+    grid-template-columns: 6.5rem minmax(0, 1fr) 6rem;
     gap: var(--space-md);
-    align-items: flex-start;
-    padding: var(--space-lg);
-    border: 1px solid rgba(212, 168, 83, 0.1);
-    border-radius: 4px;
-    max-width: 700px;
+    align-items: start;
+    padding: var(--space-md) 0;
+    border-bottom: 1px solid rgba(212, 168, 83, 0.14);
   }
 
-  .exhibition-badge {
-    flex-shrink: 0;
+  .exhibition-year {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 2.25rem;
+    line-height: 1;
     color: var(--color-accent);
-    padding-top: 0.25rem;
+    opacity: 0.85;
   }
 
-  .exhibition-info h3 {
-    font-size: 1.25rem;
-    margin-bottom: var(--space-xs);
-  }
-
-  .exhibition-info p {
+  .exhibition-date {
+    display: block;
+    margin-top: 0.4rem;
+    font-size: 0.8125rem;
     color: var(--color-text-secondary);
+  }
+
+  .exhibition-body h3 {
+    font-size: clamp(1.25rem, 2.2vw, 1.5rem);
+    transition: color 0.3s ease;
+  }
+
+  .exhibition-place {
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+  }
+
+  .exhibition-summary {
+    margin-top: var(--space-xs);
     font-size: 0.9375rem;
     line-height: 1.6;
-    margin-bottom: var(--space-md);
+    color: var(--color-text-secondary);
+    max-width: 52ch;
   }
 
-  .exhibition-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
+  .exhibition-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem var(--space-md);
+    margin-top: var(--space-sm);
     font-size: 0.875rem;
     font-weight: 500;
+    letter-spacing: 0.03em;
+  }
+
+  .exhibition-more {
     color: var(--color-accent);
-    letter-spacing: 0.05em;
+    border-bottom: 1px solid rgba(212, 168, 83, 0.4);
   }
 
-  .exhibition-link:hover {
-    color: var(--color-accent-hover);
+  .exhibition-more::after {
+    content: '';
+    position: absolute;
+    inset: 0;
   }
 
-  .exhibition-link svg {
-    transition: transform 0.3s ease;
+  .exhibition-more:focus-visible {
+    outline: none;
   }
 
-  .exhibition-link:hover svg {
-    transform: translate(2px, -2px);
+  .exhibition-more:focus-visible::after {
+    outline: 1px solid var(--color-accent);
+    outline-offset: 4px;
+  }
+
+  .exhibition-external {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--color-text-secondary);
+  }
+
+  .exhibition-external:hover {
+    color: var(--color-accent);
+  }
+
+  .exhibition-thumb {
+    overflow: hidden;
+    aspect-ratio: 4 / 5;
+    border-radius: 2px;
+    background: var(--color-surface);
+  }
+
+  .exhibition-thumb :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.9;
+    transition: transform 0.5s ease, opacity 0.3s ease;
+  }
+
+  .exhibition:hover h3 {
+    color: var(--color-accent);
+  }
+
+  .exhibition:hover .exhibition-thumb :global(img) {
+    transform: scale(1.04);
+    opacity: 1;
   }
 
   @media (max-width: 600px) {
-    .exhibition-card {
-      flex-direction: column;
-      padding: var(--space-md);
+    .exhibition {
+      grid-template-columns: minmax(0, 1fr) 3.5rem;
+      gap: 0.75rem var(--space-sm);
+      padding: var(--space-sm) 0 var(--space-md);
+    }
+
+    .exhibition-when {
+      display: flex;
+      align-items: baseline;
+      gap: 0.75rem;
+    }
+
+    .exhibition-date {
+      margin-top: 0;
+    }
+
+    .exhibition-thumb {
+      grid-column: 2;
+      grid-row: 1;
+      aspect-ratio: 1;
+    }
+
+    .exhibition-body {
+      grid-column: 1 / -1;
+      grid-row: 2;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .exhibition-thumb :global(img),
+    .exhibition:hover .exhibition-thumb :global(img) {
+      transition: none;
+      transform: none;
     }
   }
 </style>

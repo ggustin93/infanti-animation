@@ -1,0 +1,13 @@
+---
+import ExhibitionPost from '../../../components/ExhibitionPost.astro';
+import { exhibitions } from '../../../data/exhibitions';
+import content from '../../../content/en.json';
+
+export function getStaticPaths() {
+  return exhibitions.map((exhibition) => ({ params: { slug: exhibition.id }, props: { exhibition } }));
+}
+
+const { exhibition } = Astro.props;
+---
+
+<ExhibitionPost exhibition={exhibition} lang="en" content={content} />

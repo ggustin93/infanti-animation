@@ -1,0 +1,235 @@
+---
+import { Image } from 'astro:assets';
+import Layout from '../layouts/Layout.astro';
+import BackLink from './BackLink.astro';
+import { exhibitionPath, type Exhibition } from '../data/exhibitions';
+
+interface Props {
+  exhibition: Exhibition;
+  lang: 'fr' | 'en';
+  content: typeof import('../content/fr.json');
+}
+
+const { exhibition, lang, content } = Astro.props;
+
+const site = Astro.site ?? new URL('https://infanti.studio');
+const homeHref = lang === 'fr' ? '/' : '/en';
+const listHref = `${homeHref === '/' ? '' : homeHref}/#exhibitions`;
+
+const title = exhibition.title[lang];
+const summary = exhibition.summary[lang];
+const canonical = new URL(exhibitionPath(exhibition.id, lang), site).href;
+const imageUrl = new URL(exhibition.image.src, site).href;
+
+// An empty alt would ship an <img> that fails axe `image-alt`.
+if (!exhibition.imageAlt[lang]) {
+  throw new Error(`ExhibitionPost (${lang}): "${exhibition.id}" is missing imageAlt.${lang}.`);
+}
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: content.works.detail.home, item: new URL(homeHref, site).href },
+    { '@type': 'ListItem', position: 2, name: content.exhibitions.title, item: new URL(listHref, site).href },
+    { '@type': 'ListItem', position: 3, name: title, item: canonical },
+  ],
+};
+
+const eventSchema = exhibition.startDate
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'ExhibitionEvent',
+      name: title,
+      description: summary,
+      url: canonical,
+      startDate: exhibition.startDate,
+      endDate: exhibition.endDate,
+      eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+      eventStatus: 'https://schema.org/EventScheduled',
+      inLanguage: lang,
+      image: imageUrl,
+      location: exhibition.location && {
+        '@type': 'Place',
+        name: exhibition.location.name,
+        address: {
+          '@type': 'PostalAddress',
+          streetAddress: exhibition.location.streetAddress,
+          postalCode: exhibition.location.postalCode,
+          addressLocality: exhibition.location.locality,
+          addressCountry: exhibition.location.country,
+        },
+      },
+      organizer: { '@id': 'https://infanti.studio/#organization' },
+      performer: { '@id': 'https://infanti.studio/#organization' },
+    }
+  : undefined;
+
+const schema = [breadcrumbSchema, ...(eventSchema ? [eventSchema] : [])];
+---
+
+<Layout
+  title={`${title} — Infanti Studio`}
+  description={summary}
+  lang={lang}
+  image={imageUrl}
+  schema={schema}
+  altPathFr={exhibitionPath(exhibition.id, 'fr')}
+  altPathEn={exhibitionPath(exhibition.id, 'en')}
+>
+  <main class="exhibition-post">
+    <div class="container">
+      <BackLink href={listHref} label={content.exhibitions.backLabel} />
+
+      <article class="post">
+        <header class="post-header">
+          <h1 class="post-title">{title}</h1>
+          <p class="post-when">{exhibition.dateLabel[lang]}</p>
+          <p class="post-where">{exhibition.place[lang]}</p>
+        </header>
+
+        <div class="post-media">
+          <Image
+            src={exhibition.image}
+            width={560}
+            densities={[1, 2]}
+            format="avif"
+            quality={80}
+            alt={exhibition.imageAlt[lang]}
+            loading="eager"
+          />
+        </div>
+
+        <div class="post-body">
+          {exhibition.body[lang].map((paragraph) => <p>{paragraph}</p>)}
+          <a href={exhibition.externalUrl} target="_blank" rel="noopener noreferrer" class="post-link">
+            {exhibition.externalLabel[lang]}
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <path d="M6 3h7v7M13 3L5 11" />
+            </svg>
+          </a>
+        </div>
+      </article>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .exhibition-post {
+    min-height: 100vh;
+    background: var(--color-bg);
+    padding-top: var(--space-xl);
+    padding-bottom: var(--space-xl);
+  }
+
+  .container {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+  }
+
+  .post {
+    display: grid;
+    gap: var(--space-md);
+    margin-top: var(--space-md);
+  }
+
+  .post-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3.25rem);
+    font-weight: 400;
+    color: var(--color-text);
+    max-width: 18ch;
+  }
+
+  .post-when {
+    margin-top: var(--space-sm);
+    font-family: var(--font-display);
+    font-size: 1.375rem;
+    color: var(--color-accent);
+  }
+
+  .post-where {
+    margin-top: 0.25rem;
+    color: var(--color-text-secondary);
+    font-size: 0.9375rem;
+  }
+
+  .post-body {
+    max-width: 60ch;
+  }
+
+  .post-body p {
+    color: var(--color-text-secondary);
+    font-size: 1.0625rem;
+    line-height: 1.8;
+  }
+
+  .post-body p + p {
+    margin-top: var(--space-sm);
+  }
+
+  .post-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: var(--space-md);
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    color: var(--color-accent);
+  }
+
+  .post-link:hover {
+    color: var(--color-accent-hover);
+  }
+
+  .post-link svg {
+    transition: transform 0.3s ease;
+  }
+
+  .post-link:hover svg {
+    transform: translate(2px, -2px);
+  }
+
+  .post-media img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 2px;
+  }
+
+  @media (min-width: 900px) {
+    .post {
+      grid-template-columns: 5fr 6fr;
+      column-gap: var(--space-xl);
+      row-gap: var(--space-md);
+      align-items: start;
+    }
+
+    .post-header {
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    .post-media {
+      grid-column: 1;
+      grid-row: 1 / span 2;
+    }
+
+    .post-body {
+      grid-column: 2;
+      grid-row: 2;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .post-link svg {
+      transition: none;
+    }
+
+    .post-link:hover svg {
+      transform: none;
+    }
+  }
+</style>
