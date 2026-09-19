@@ -8,9 +8,9 @@
 #   ./scripts/fetch-latest-reels.sh [username] [--limit N] [--browser chrome|firefox|safari]
 #
 # Examples:
-#   ./scripts/fetch-latest-reels.sh                          # defaults to margot.infanti, limit 10
-#   ./scripts/fetch-latest-reels.sh margot.infanti --limit 5
-#   ./scripts/fetch-latest-reels.sh margot.infanti --browser firefox
+#   ./scripts/fetch-latest-reels.sh                          # defaults to infanti.studio, limit 10
+#   ./scripts/fetch-latest-reels.sh infanti.studio --limit 5
+#   ./scripts/fetch-latest-reels.sh infanti.studio --browser firefox
 #
 # Output:
 #   Lists URLs of new reels (not yet in works.ts) with suggested download commands
@@ -18,7 +18,7 @@
 set -euo pipefail
 
 # ── Args ──────────────────────────────────────────────────────────────────────
-USERNAME="${1:-margot.infanti}"
+USERNAME="${1:-infanti.studio}"
 LIMIT=10
 BROWSER=""
 

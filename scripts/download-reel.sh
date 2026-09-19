@@ -165,12 +165,12 @@ echo "    description: { fr: '$DESC_FR', en: '$DESC_EN' },"
 echo "    thumbnail: $IMPORT_NAME,"
 echo "    video: '/videos/works/$SLUG.mp4',"
 echo "    externalUrl: '$URL',"
+if [[ -n "$HASHTAGS" ]]; then
+  KEYWORDS="$(echo "$HASHTAGS" | tr -d '#' | awk '{for (i=1;i<=NF;i++) printf "%s\x27%s\x27", (i>1 ? ", " : ""), tolower($i)}')"
+  echo "    keywords: [$KEYWORDS],"
+fi
 echo "    year: $YEAR,"
 echo "    featured: false,"
 echo "  },"
-if [[ -n "$HASHTAGS" ]]; then
-  echo ""
-  echo "  // Hashtags Instagram: $HASHTAGS"
-fi
 echo "  ────────────────────────────────────────────────────"
 echo ""

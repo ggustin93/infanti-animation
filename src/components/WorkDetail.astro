@@ -38,6 +38,7 @@ const videoSchema = work.video
       contentUrl: mp4Url,
       uploadDate: `${work.year}-01-01`,
       inLanguage: lang,
+      keywords: work.keywords?.join(', '),
       creator: { '@id': 'https://infanti.studio/#organization' },
       publisher: { '@id': 'https://infanti.studio/#organization' },
     }

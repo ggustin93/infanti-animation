@@ -1,4 +1,5 @@
 import type { ImageMetadata } from 'astro';
+import iceCreamThumb from '../assets/images/works/ice-cream.jpg';
 import frogThumb from '../assets/images/works/frog.jpg';
 import afraidThumb from '../assets/images/works/afraid-of-losing.jpg';
 import oysterThumb from '../assets/images/works/oyster-boy.jpg';
@@ -20,11 +21,29 @@ export interface Work {
   thumbnail: ImageMetadata;
   video?: string;
   externalUrl: string;
+  keywords?: string[];
   year: number;
   featured: boolean;
 }
 
 export const works: Work[] = [
+  {
+    id: 'ice-cream',
+    title: {
+      fr: 'Presque Parfait',
+      en: 'Almost Perfectly Done',
+    },
+    description: {
+      fr: 'Une petite créature verte en laine feutrée à l\'aiguille, couronnée d\'une boule de glace et d\'une cerise, danse image par image sur de la feutrine rouge.',
+      en: 'A little green needle-felted creature, crowned with a scoop of ice cream and a cherry, dances frame by frame on red felt.',
+    },
+    thumbnail: iceCreamThumb,
+    video: '/videos/works/ice-cream.mp4',
+    externalUrl: 'https://www.instagram.com/p/DcTThIEoOOL/',
+    keywords: ['stopmotion', 'animation', 'icecream', 'dancechallenge', 'iwantyouback'],
+    year: 2026,
+    featured: false,
+  },
   {
     id: 'messy-bird',
     title: {

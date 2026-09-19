@@ -107,9 +107,8 @@
   },
   "exhibitions": {
     "title": "Exhibitions",
-    "archivesTitle": "Archives Exhibitions",
-    "archivesDescription": "Louise and Margot participated in Archives Exhibitions, a platform dedicated to showcasing emerging artists in the field of animation and visual arts.",
-    "visitLink": "Discover on Archives Exhibitions"
+    "readMore": "Read more",
+    "backLabel": "Back to exhibitions"
   },
   "contact": {
     "title": "Contact",
