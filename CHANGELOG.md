@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Subtle site-wide starfield background (fixed dim stars plus two desynchronised twinkling layers, gold and cream) and a random shooting star every few seconds (random direction, angle and speed; occasional larger, slower one), pure CSS with a small script in `Layout` for the randomisation; disabled under `prefers-reduced-motion`
 - Exhibition posts at `/expositions/[slug]` (FR) and `/en/exhibitions/[slug]` (EN) for *Laine des Songes — Puppet in the City* (Uccle, 18–20 Sept 2026) and *ARCHIVES: whimsy* (Lafayette, 12 July 2025), each with a photo/poster, bilingual copy, `ExhibitionEvent` + `BreadcrumbList` JSON-LD and per-page `hreflang`
 - `ExhibitionPost` component and `src/data/exhibitions.ts` (typed FR/EN catalogue, same pattern as `works.ts`)
 - Optional `keywords` field on works, filled from the Instagram hashtags by `download-reel.sh` and emitted in the `VideoObject` JSON-LD

@@ -136,6 +136,7 @@ const pageSchemas = schema ? (Array.isArray(schema) ? schema : [schema]) : [];
     ))}
   </head>
   <body>
+    <div class="stars" aria-hidden="true"><i class="shooting-star"></i></div>
     <slot />
 
     <script>
@@ -157,6 +158,28 @@ const pageSchemas = schema ? (Array.isArray(schema) ? schema : [schema]) : [];
       }
 
       initReveal();
+
+      // Shooting star: random spot, direction (down-left or down-right), angle and speed, 2.5–7s pause between shots.
+      // ~1 in 4 is a "big" one: larger, slower, longer trail.
+      const star = document.querySelector<HTMLElement>('.shooting-star');
+      if (star && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const fire = () => {
+          const big = Math.random() < 0.25;
+          const a = 15 + Math.random() * 35;
+          const leftward = Math.random() < 0.5; // mirror the trajectory: start on the right, head down-left
+          star.style.left = `${leftward ? 40 + Math.random() * 55 : 5 + Math.random() * 55}vw`;
+          star.style.top = `${5 + Math.random() * 50}vh`;
+          star.style.setProperty('--a', `${leftward ? 180 - a : a}deg`);
+          star.style.setProperty('--d', `${big ? 3.5 + Math.random() * 1.5 : 1.6 + Math.random() * 1.6}s`);
+          star.style.setProperty('--s', big ? `${1.6 + Math.random() * 0.5}` : '1');
+          star.style.setProperty('--x', big ? '640px' : '420px');
+          star.classList.remove('go');
+          void star.offsetWidth; // restart the animation
+          star.classList.add('go');
+        };
+        star.addEventListener('animationend', () => setTimeout(fire, 2500 + Math.random() * 4500));
+        setTimeout(fire, 2000);
+      }
     </script>
   </body>
 </html>
