@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `ExhibitionPost` component and `src/data/exhibitions.ts` (typed FR/EN catalogue, same pattern as `works.ts`)
 - Optional `keywords` field on works, filled from the Instagram hashtags by `download-reel.sh` and emitted in the `VideoObject` JSON-LD
 - Work *Presque Parfait* / *Almost Perfectly Done* (`ice-cream`, Instagram post of 21 Aug 2026)
+- Five works — `how-feelings-are-born`, `messy-bird`, `metamorphose`, `time-to-be-human`, `water-phoenix` — each with mp4, webm and thumbnail
+- Methodology teaser section on both homepages, between Works and Exhibitions: the five stage labels as gold display-serif numerals with the page's intro, linking to `/methodologie` (`/en/methodology`); typographic rather than photographic so it is not read as "more works"
 - Individual work detail pages at `/works/[slug]` (FR) and `/en/works/[slug]` (EN) — crawlable, indexable pages per work with video, description, breadcrumb, and internal links to the rest of the catalogue (previously works only opened a modal + linked to Instagram)
 - `WorkDetail` component emitting `VideoObject` and `BreadcrumbList` JSON-LD per work page (eligible for Google video rich results)
 - Site-wide structured-data `@graph` on every page — `Organization` (with founders, `foundingDate`, address, telephone, raster logo), `WebSite`, and a `Person` entity for each sister — strengthening brand disambiguation
@@ -31,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Instagram consolidated on `@infanti.studio`: one Contact link, one Organization `sameAs` entry; the two personal profiles are no longer linked and the Person entities lose their Instagram `sameAs`
 - `fetch-latest-reels.sh` now defaults to the `infanti.studio` profile
 - Archives Exhibitions link now targets the artist page on the Wix site
+- Work cards, video modal and detail pages refined; the modal's dialog and close-button `aria-label`s now come from `works.modalLabel` / `works.closeVideo` in `fr.json` and `en.json` (were hardcoded English on the French page)
 - `hreflang` tags are now computed per page from the current path (were hardcoded to the homepage on every page, so `/works` etc. declared the wrong alternates)
 - Sitemap now emits `xhtml:link` language alternates via the `@astrojs/sitemap` `i18n` option
 - Bare `Organization` JSON-LD replaced by a full entity graph; `logo` switched from the SVG favicon to a raster image
@@ -42,6 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `fetch-latest-reels.sh` cannot list the Instagram profile: yt-dlp's profile extractor is marked broken upstream (still failing on 2026.08.19). `download-reel.sh` works on individual post URLs.
 
 ### Fixed
+- `download-reel.sh` aborted on stock macOS bash 3.2 whenever `IG_COOKIES` was unset (empty array expansion under `set -u`); cookie args are now expanded safely at both call sites
 - Emoji-only work titles (`🌺🦷`, `🐽`, `🐸✨`), empty descriptions, and one mistranslated `apartment` description in `works.ts` replaced with real bilingual copy (drafts pending studio review)
 - Mobile menu stayed open when following a cross-page navigation link — the close handler now matches all `a` elements instead of only `a[href^="#"]`
 - Header logo href carried a trailing slash on EN (`/en/`) conflicting with `trailingSlash: 'never'` — corrected to `/en`
